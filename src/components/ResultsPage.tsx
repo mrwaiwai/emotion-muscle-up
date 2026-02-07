@@ -56,10 +56,10 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           </motion.div>
           
           <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-            做得好，<span className="gradient-text">{result.studentName}</span>！
+            好叻呀，<span className="gradient-text">{result.studentName}</span>！
           </h1>
           <p className="text-lg text-muted-foreground">
-            你已經完成了情緒 MUSCLE UP 測驗
+            你完成咗情緒 MUSCLE UP 測驗喇！
           </p>
         </motion.div>
 
@@ -69,10 +69,10 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           <GlassCard className="p-6 mb-6">
             <div className="flex items-center gap-3 mb-4">
               <Sparkles className="w-6 h-6 text-primary" />
-              <h2 className="text-xl font-bold">你的情緒肌肉地圖</h2>
+              <h2 className="text-xl font-bold">你嘅情緒肌肉地圖 🗺️</h2>
             </div>
             <p className="text-muted-foreground mb-4">
-              這個雷達圖顯示你在五大核心技能上的表現
+              呢個圖顯示你喺五種情緒技能嘅表現
             </p>
             <SkillsRadarChart skillScores={result.skillScores} />
           </GlassCard>
@@ -81,7 +81,7 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           <GlassCard className="p-6 mb-6">
             <div className="flex items-center gap-3 mb-4">
               <Star className="w-6 h-6 text-emotion-labeling" />
-              <h2 className="text-xl font-bold">五大核心技能</h2>
+              <h2 className="text-xl font-bold">五種情緒技能</h2>
             </div>
             <SkillBars skillScores={result.skillScores} />
           </GlassCard>
@@ -105,17 +105,17 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           >
             <p className="text-lg leading-relaxed mb-4">
               <span className="text-2xl mr-2">🌟</span>
-              這是一幅屬於你的<strong className="text-primary">情緒肌肉地圖</strong>！
+              呢個係屬於你嘅<strong className="text-primary">情緒肌肉地圖</strong>！
               <br />
-              每個人都有自己獨特的成長節奏，<strong>沒有好壞之分</strong>，只有不同的發展階段。
+              每個人都有自己嘅成長速度，<strong>冇分好壞</strong>，只係唔同階段。
               <br />
-              透過練習和支持，你的情緒肌肉會越來越強壯！
+              繼續練習，你嘅情緒肌肉會越嚟越強！
               <span className="text-2xl ml-2">💪</span>
             </p>
             
             <div className="p-4 rounded-xl bg-muted/30 text-sm text-muted-foreground">
               <p>
-                💡 測驗只是起點，真正的成長會透過課堂活動、情緒工作坊、靜觀練習等實際體驗完成。
+                💡 測驗只係起點，真正嘅成長會喺課堂活動、工作坊同練習入面發生！
               </p>
             </div>
           </motion.div>
@@ -144,7 +144,7 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
             className="h-14 px-8 rounded-xl"
           >
             <RotateCcw className="w-5 h-5 mr-2" />
-            重新測驗
+            再做一次
           </Button>
         </motion.div>
 
@@ -155,7 +155,7 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          ⚠️ 此測驗僅作參考，並非心理診斷。如有疑慮，請諮詢專業人士。
+          ⚠️ 呢個測驗只係參考，唔係心理診斷。如有疑問，請諮詢專業人士。
         </motion.p>
       </div>
     </div>

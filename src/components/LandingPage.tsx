@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GlassCard } from './GlassCard';
+import { HeroAnimation } from './HeroAnimation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Heart, Sparkles, ArrowRight, BookOpen, Users, Star } from 'lucide-react';
@@ -22,10 +23,10 @@ export function LandingPage({ onStart }: LandingPageProps) {
   };
 
   const stages = [
-    { name: 'Show up', desc: '勇敢現身，坦然面對', icon: '💪' },
-    { name: 'Step out', desc: '跨出去，探索可能', icon: '🚀' },
-    { name: 'Value', desc: '聽從內心，依循價值', icon: '❤️' },
-    { name: 'Move on', desc: '向前走，持續成長', icon: '✨' },
+    { name: 'Show up', desc: '勇敢面對', icon: '💪' },
+    { name: 'Step out', desc: '踏出一步', icon: '🚀' },
+    { name: 'Value', desc: '跟住內心', icon: '❤️' },
+    { name: 'Move on', desc: '繼續向前', icon: '✨' },
   ];
 
   const skills = [
@@ -45,39 +46,31 @@ export function LandingPage({ onStart }: LandingPageProps) {
         transition={{ duration: 0.6 }}
       >
         {/* Hero Section */}
-        <div className="text-center mb-8">
-          <motion.div
-            className="inline-flex items-center gap-2 mb-4"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="text-5xl">💪</span>
-            <span className="text-5xl">🧠</span>
-            <span className="text-5xl">❤️</span>
-          </motion.div>
-          
+        <div className="text-center mb-6">
           <motion.h1
-            className="text-4xl md:text-6xl font-extrabold mb-4"
+            className="text-4xl md:text-6xl font-extrabold mb-2"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.2 }}
           >
             <span className="gradient-text">情緒 MUSCLE UP</span>
           </motion.h1>
           
           <motion.p
-            className="text-xl md:text-2xl text-muted-foreground font-medium"
+            className="text-xl md:text-2xl text-muted-foreground font-medium mb-2"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.3 }}
           >
-            兒童情緒能力測驗
+            兒童情緒能力測驗 💪🧠❤️
           </motion.p>
         </div>
 
+        {/* Hero Animation Video */}
+        <HeroAnimation />
+
         {/* Info Cards Grid */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
           {/* About Card */}
           <GlassCard className="p-6">
             <div className="flex items-start gap-4">
@@ -85,12 +78,12 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 <Heart className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h2 className="text-xl font-bold mb-2">關於這個測驗</h2>
+                <h2 className="text-xl font-bold mb-2">呢個測驗係咩嚟㗎？</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  這個測驗幫助你認識自己的<strong>情緒肌肉</strong>！
-                  我們會一起探索你在辨別、理解、標記、表達和調節情緒方面的能力。
-                  記住：<span className="text-primary font-semibold">沒有好壞之分</span>，
-                  每個人都有自己獨特的成長階段。
+                  我哋會一齊探索你嘅<strong>情緒肌肉</strong>！
+                  睇吓你喺認識同處理情緒方面做得點。
+                  記住：<span className="text-primary font-semibold">冇分好壞</span>，
+                  每個人都有自己嘅成長速度！
                 </p>
               </div>
             </div>
@@ -103,14 +96,14 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 <Users className="w-6 h-6 text-accent-foreground" />
               </div>
               <div>
-                <h2 className="text-xl font-bold mb-2">適用對象</h2>
+                <h2 className="text-xl font-bold mb-2">邊個可以玩？</h2>
                 <p className="text-muted-foreground leading-relaxed mb-3">
-                  專為 <strong className="text-primary">小一至小六</strong> 學生設計（7-12歲）
+                  <strong className="text-primary">小一至小六</strong> 嘅同學仔（7-12歲）
                 </p>
                 <div className="flex items-center gap-2 p-3 rounded-xl bg-muted/50">
                   <BookOpen className="w-5 h-5 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">
-                    ⚠️ 此測驗僅作參考，並非心理診斷
+                    ⚠️ 呢個只係參考，唔係心理測試
                   </span>
                 </div>
               </div>
@@ -119,10 +112,10 @@ export function LandingPage({ onStart }: LandingPageProps) {
         </div>
 
         {/* Skills Section */}
-        <GlassCard className="p-6 mb-8">
+        <GlassCard className="p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
             <Sparkles className="w-6 h-6 text-primary" />
-            <h2 className="text-xl font-bold">五大核心技能</h2>
+            <h2 className="text-xl font-bold">我哋會睇呢 5 種情緒技能</h2>
           </div>
           <div className="flex flex-wrap gap-2 mb-6">
             {skills.map((skill, index) => (
@@ -140,7 +133,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
           
           <h3 className="font-bold mb-3 flex items-center gap-2">
             <Star className="w-5 h-5 text-emotion-labeling" />
-            四大成長階段
+            四個成長階段
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {stages.map((stage, index) => (
@@ -167,8 +160,8 @@ export function LandingPage({ onStart }: LandingPageProps) {
             transition={{ delay: 0.9 }}
           >
             <p className="text-lg text-muted-foreground mb-6">
-              測驗大約需要 <strong className="text-primary">5-10 分鐘</strong>，
-              準備好了嗎？
+              大約 <strong className="text-primary">5-10 分鐘</strong> 就做完，
+              準備好未？🎯
             </p>
 
             {showNameInput && (
@@ -179,7 +172,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 transition={{ duration: 0.3 }}
               >
                 <label className="block text-left font-medium mb-2">
-                  請輸入你的名字 / 代號 👋
+                  你叫咩名？👋
                 </label>
                 <Input
                   type="text"
@@ -197,7 +190,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
               disabled={showNameInput && !name.trim()}
               className="touch-button bg-primary-gradient text-primary-foreground text-xl px-12"
             >
-              {showNameInput ? '開始測驗' : '準備開始'}
+              {showNameInput ? '開始啦！' : '我準備好喇！'}
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </motion.div>

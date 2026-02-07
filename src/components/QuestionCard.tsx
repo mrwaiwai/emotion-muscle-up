@@ -75,7 +75,7 @@ export function QuestionCard({
               {/* Question Header */}
               <div className="flex items-start gap-4 mb-6">
                 <motion.span
-                  className="text-4xl md:text-5xl"
+                  className="text-5xl md:text-6xl"
                   animate={{ rotate: [0, 10, -10, 0] }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
@@ -85,21 +85,21 @@ export function QuestionCard({
                   <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-white/50 text-muted-foreground mb-2">
                     {question.questionTextEn}
                   </span>
-                  <h2 className="text-xl md:text-2xl font-bold leading-relaxed">
+                  <h2 className="text-2xl md:text-3xl font-bold leading-relaxed">
                     {question.questionText}
                   </h2>
                 </div>
               </div>
 
               {/* Options */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {question.options.map((option, index) => {
                   const isSelected = selectedAnswer === option.score;
                   return (
                     <motion.button
                       key={option.id}
                       className={cn(
-                        "option-button flex items-center gap-4",
+                        "option-button flex items-center gap-4 min-h-[80px]",
                         isSelected && "selected"
                       )}
                       onClick={() => onAnswer(question.id, option.score)}
@@ -110,14 +110,14 @@ export function QuestionCard({
                       whileTap={{ scale: 0.98 }}
                     >
                       <span className={cn(
-                        "w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg transition-colors",
+                        "w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl transition-colors shrink-0",
                         isSelected 
                           ? "bg-primary text-primary-foreground" 
                           : "bg-muted/50 text-muted-foreground"
                       )}>
-                        {isSelected ? <Check className="w-5 h-5" /> : String.fromCharCode(65 + index)}
+                        {isSelected ? <Check className="w-6 h-6" /> : String.fromCharCode(65 + index)}
                       </span>
-                      <span className="flex-1 text-left text-base md:text-lg font-medium">
+                      <span className="flex-1 text-left text-lg md:text-xl font-medium">
                         {option.text}
                       </span>
                     </motion.button>
@@ -140,9 +140,9 @@ export function QuestionCard({
             size="lg"
             onClick={onPrev}
             disabled={questionIndex === 0}
-            className="h-14 px-6 rounded-xl"
+            className="h-16 px-6 rounded-xl text-lg"
           >
-            <ChevronLeft className="w-5 h-5 mr-1" />
+            <ChevronLeft className="w-6 h-6 mr-1" />
             上一題
           </Button>
 
@@ -151,19 +151,19 @@ export function QuestionCard({
               size="lg"
               onClick={onComplete}
               disabled={!hasAnswer}
-              className="h-14 px-8 rounded-xl bg-primary-gradient text-primary-foreground"
+              className="h-16 px-8 rounded-xl bg-primary-gradient text-primary-foreground text-lg"
             >
-              完成測驗 ✨
+              完成啦！✨
             </Button>
           ) : (
             <Button
               size="lg"
               onClick={onNext}
               disabled={!hasAnswer}
-              className="h-14 px-6 rounded-xl"
+              className="h-16 px-6 rounded-xl text-lg"
             >
               下一題
-              <ChevronRight className="w-5 h-5 ml-1" />
+              <ChevronRight className="w-6 h-6 ml-1" />
             </Button>
           )}
         </motion.div>

@@ -1,5 +1,6 @@
 // 情緒 MUSCLE UP Assessment Questions
 // Configurable question structure for easy modifications
+// 題目已簡化，適合小一至小六學生閱讀
 
 export type SkillType = 'recognizing' | 'understanding' | 'labeling' | 'expressing' | 'regulating';
 
@@ -55,143 +56,143 @@ export const skillInfo: Record<SkillType, { name: string; nameEn: string; color:
 };
 
 export const questions: Question[] = [
-  // Recognizing Questions
+  // Recognizing Questions - 辨別
   {
     id: 'r1',
     type: 'scenario',
     skill: 'recognizing',
-    questionText: '當你看到同學一個人坐在角落不說話，你覺得他可能有什麼感受？',
-    questionTextEn: 'Recognizing others\' feelings',
+    questionText: '同學一個人坐喺角落唔出聲，你覺得佢點呀？',
+    questionTextEn: '睇吓人哋感受',
     icon: '👀',
     options: [
-      { id: 'r1a', text: '他可能傷心或不開心', score: 3 },
-      { id: 'r1b', text: '他應該只是想安靜一下', score: 2 },
-      { id: 'r1c', text: '我不太確定他的感受', score: 1 },
+      { id: 'r1a', text: '佢可能唔開心 😢', score: 3 },
+      { id: 'r1b', text: '佢想靜吓 🤫', score: 2 },
+      { id: 'r1c', text: '我唔知道 🤷', score: 1 },
     ],
   },
   {
     id: 'r2',
     type: 'self-description',
     skill: 'recognizing',
-    questionText: '當你心情不好時，你通常能察覺到嗎？',
-    questionTextEn: 'Recognizing your own feelings',
+    questionText: '你唔開心嘅時候，你會知道嗎？',
+    questionTextEn: '留意自己感受',
     icon: '💭',
     options: [
-      { id: 'r2a', text: '是的，我很快就能感覺到', score: 3 },
-      { id: 'r2b', text: '有時候可以，有時候不行', score: 2 },
-      { id: 'r2c', text: '我經常不知道自己心情不好', score: 1 },
+      { id: 'r2a', text: '會呀，我好快就知 ✓', score: 3 },
+      { id: 'r2b', text: '有時知，有時唔知 🤔', score: 2 },
+      { id: 'r2c', text: '好多時都唔知 ❓', score: 1 },
     ],
   },
 
-  // Understanding Questions
+  // Understanding Questions - 理解
   {
     id: 'u1',
     type: 'scenario',
     skill: 'understanding',
-    questionText: '小明的朋友突然不理他了，小明很傷心。你覺得小明為什麼會傷心？',
-    questionTextEn: 'Understanding why we feel',
+    questionText: '朋友突然唔理你，你會點諗？',
+    questionTextEn: '明白點解會咁',
     icon: '🤔',
     options: [
-      { id: 'u1a', text: '因為他覺得被朋友拒絕了，這讓他很難過', score: 3 },
-      { id: 'u1b', text: '因為他沒有人可以玩', score: 2 },
-      { id: 'u1c', text: '我不太清楚原因', score: 1 },
+      { id: 'u1a', text: '可能佢今日心情唔好 💭', score: 3 },
+      { id: 'u1b', text: '可能佢好忙 ⏰', score: 2 },
+      { id: 'u1c', text: '我唔知點解 🤷', score: 1 },
     ],
   },
   {
     id: 'u2',
     type: 'self-description',
     skill: 'understanding',
-    questionText: '當你感到生氣時，你能明白自己為什麼生氣嗎？',
-    questionTextEn: 'Understanding your emotions',
+    questionText: '你嬲嘅時候，知唔知自己點解嬲？',
+    questionTextEn: '了解自己情緒',
     icon: '❓',
     options: [
-      { id: 'u2a', text: '是的，我通常知道原因', score: 3 },
-      { id: 'u2b', text: '有時候知道，有時候不確定', score: 2 },
-      { id: 'u2c', text: '我經常不知道為什麼生氣', score: 1 },
+      { id: 'u2a', text: '知呀，我明白原因 💡', score: 3 },
+      { id: 'u2b', text: '有時知，有時唔清楚 🤷', score: 2 },
+      { id: 'u2c', text: '多數唔知點解 ❓', score: 1 },
     ],
   },
 
-  // Labeling Questions
+  // Labeling Questions - 標記
   {
     id: 'l1',
     type: 'emotion-image',
     skill: 'labeling',
-    questionText: '當你考試考得很好時，你會用什麼詞語形容自己的心情？',
-    questionTextEn: 'Labeling your feelings',
+    questionText: '考試攞到好成績，你會點形容心情？',
+    questionTextEn: '講出感受',
     icon: '🏷️',
     options: [
-      { id: 'l1a', text: '驕傲、開心、滿足', score: 3 },
-      { id: 'l1b', text: '高興', score: 2 },
-      { id: 'l1c', text: '我不太會形容', score: 1 },
+      { id: 'l1a', text: '開心、驕傲、滿足 🎉', score: 3 },
+      { id: 'l1b', text: '好高興 😊', score: 2 },
+      { id: 'l1c', text: '唔識講 🤷', score: 1 },
     ],
   },
   {
     id: 'l2',
     type: 'scenario',
     skill: 'labeling',
-    questionText: '你能分辨「緊張」和「害怕」有什麼不同嗎？',
-    questionTextEn: 'Differentiating emotions',
+    questionText: '「緊張」同「驚」係咪一樣㗎？',
+    questionTextEn: '分辨唔同感受',
     icon: '📝',
     options: [
-      { id: 'l2a', text: '可以，它們是不同的感覺', score: 3 },
-      { id: 'l2b', text: '有點像，但不太一樣', score: 2 },
-      { id: 'l2c', text: '我覺得差不多', score: 1 },
+      { id: 'l2a', text: '唔一樣，係兩種感覺 ✓', score: 3 },
+      { id: 'l2b', text: '有啲似，但唔同 🤔', score: 2 },
+      { id: 'l2c', text: '差唔多 🤷', score: 1 },
     ],
   },
 
-  // Expressing Questions
+  // Expressing Questions - 表達
   {
     id: 'e1',
     type: 'scenario',
     skill: 'expressing',
-    questionText: '當你覺得委屈時，你會怎麼做？',
-    questionTextEn: 'Expressing your feelings',
+    questionText: '你覺得委屈嘅時候，會點做？',
+    questionTextEn: '講出感受',
     icon: '💬',
     options: [
-      { id: 'e1a', text: '我會找人說出我的感受', score: 3 },
-      { id: 'e1b', text: '我會自己想辦法處理', score: 2 },
-      { id: 'e1c', text: '我會把感覺藏起來', score: 1 },
+      { id: 'e1a', text: '搵人傾吓 🗣️', score: 3 },
+      { id: 'e1b', text: '自己諗辦法 💭', score: 2 },
+      { id: 'e1c', text: '收埋唔講 🤐', score: 1 },
     ],
   },
   {
     id: 'e2',
     type: 'self-description',
     skill: 'expressing',
-    questionText: '你覺得告訴別人你的感受容易嗎？',
-    questionTextEn: 'Sharing emotions with others',
+    questionText: '同人講自己嘅感受，容唔容易？',
+    questionTextEn: '分享心情',
     icon: '🗣️',
     options: [
-      { id: 'e2a', text: '容易，我喜歡分享感受', score: 3 },
-      { id: 'e2b', text: '有時候容易，有時候很難', score: 2 },
-      { id: 'e2c', text: '很難，我不太會表達', score: 1 },
+      { id: 'e2a', text: '好容易，我鍾意分享 💚', score: 3 },
+      { id: 'e2b', text: '有時易，有時難 🤔', score: 2 },
+      { id: 'e2c', text: '好難，我唔識講 😶', score: 1 },
     ],
   },
 
-  // Regulating Questions
+  // Regulating Questions - 調節
   {
     id: 'g1',
     type: 'scenario',
     skill: 'regulating',
-    questionText: '當你非常生氣時，你會怎麼讓自己冷靜下來？',
-    questionTextEn: 'Calming yourself down',
+    questionText: '好嬲嘅時候，你會點樣冷靜返？',
+    questionTextEn: '令自己冷靜',
     icon: '🧘',
     options: [
-      { id: 'g1a', text: '深呼吸、數數或離開一下', score: 3 },
-      { id: 'g1b', text: '等一會兒就好了', score: 2 },
-      { id: 'g1c', text: '我不知道怎麼冷靜', score: 1 },
+      { id: 'g1a', text: '深呼吸、數數或者行開吓 🌬️', score: 3 },
+      { id: 'g1b', text: '等一陣就好返 ⏳', score: 2 },
+      { id: 'g1c', text: '唔知點冷靜 😤', score: 1 },
     ],
   },
   {
     id: 'g2',
     type: 'self-description',
     skill: 'regulating',
-    questionText: '當事情不如你想像時，你能接受嗎？',
-    questionTextEn: 'Adapting to changes',
+    questionText: '如果事情唔係你想咁，你接受到嗎？',
+    questionTextEn: '接受變化',
     icon: '🔄',
     options: [
-      { id: 'g2a', text: '可以，我會想其他辦法', score: 3 },
-      { id: 'g2b', text: '需要一點時間，但可以', score: 2 },
-      { id: 'g2c', text: '很難接受，我會很不開心', score: 1 },
+      { id: 'g2a', text: '可以，我會諗其他辦法 💪', score: 3 },
+      { id: 'g2b', text: '要啲時間，但OK 🕐', score: 2 },
+      { id: 'g2c', text: '好難接受 😢', score: 1 },
     ],
   },
 ];
