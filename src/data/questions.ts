@@ -98,6 +98,7 @@ export const questions: Question[] = [
     questionText: '朋友笑緊，但眼仔紅紅，你覺得佢點？',
     questionTextEn: 'Your friend is smiling but has red eyes. How do you think they feel?',
     icon: '🔍',
+    videoUrl: '/videos/q11.mp4',
     options: [
       { id: 'r3a', text: '佢可能強顏歡笑 😔', textEn: 'They might be hiding sadness 😔', score: 3 },
       { id: 'r3b', text: '可能眼攰咗 👁️', textEn: 'Maybe their eyes are tired 👁️', score: 2 },
@@ -111,6 +112,7 @@ export const questions: Question[] = [
     questionText: '當你個心跳得好快，你知唔知係咩感覺？',
     questionTextEn: 'When your heart beats fast, do you know what you are feeling?',
     icon: '💓',
+    videoUrl: '/videos/q12.mp4',
     options: [
       { id: 'r4a', text: '知，可能係緊張或興奮 💓', textEn: 'Yes, maybe nervous or excited 💓', score: 3 },
       { id: 'r4b', text: '有時會諗吓 🤔', textEn: 'Sometimes I think about it 🤔', score: 2 },
@@ -154,6 +156,7 @@ export const questions: Question[] = [
     questionText: '細佬妹搶你玩具，你嬲咗。你知唔知點解會嬲？',
     questionTextEn: 'Your sibling takes your toy and you get angry. Do you know why?',
     icon: '🧸',
+    videoUrl: '/videos/q13.mp4',
     options: [
       { id: 'u3a', text: '因為我覺得唔公平 ⚖️', textEn: 'Because I feel it is unfair ⚖️', score: 3 },
       { id: 'u3b', text: '因為佢搶咗我嘢 😠', textEn: 'Because they took my stuff 😠', score: 2 },
@@ -167,6 +170,7 @@ export const questions: Question[] = [
     questionText: '當你開心嘅時候，你會諗吓點解開心嗎？',
     questionTextEn: 'When you are happy, do you think about why?',
     icon: '☀️',
+    videoUrl: '/videos/q14.mp4',
     options: [
       { id: 'u4a', text: '會，我鍾意知道原因 🌟', textEn: 'Yes, I like to know why 🌟', score: 3 },
       { id: 'u4b', text: '有時會諗吓 💭', textEn: 'Sometimes I think about it 💭', score: 2 },
@@ -210,6 +214,7 @@ export const questions: Question[] = [
     questionText: '俾人讚嘅時候，你會用咩詞語形容？',
     questionTextEn: 'When someone praises you, how would you describe your feeling?',
     icon: '🌈',
+    videoUrl: '/videos/q15.mp4',
     options: [
       { id: 'l3a', text: '自豪、受重視、感激 🌟', textEn: 'Proud, valued, grateful 🌟', score: 3 },
       { id: 'l3b', text: '開心 😊', textEn: 'Happy 😊', score: 2 },
@@ -223,6 +228,7 @@ export const questions: Question[] = [
     questionText: '「失望」同「傷心」有咩分別？',
     questionTextEn: 'What is the difference between "disappointed" and "sad"?',
     icon: '💔',
+    videoUrl: '/videos/q16.mp4',
     options: [
       { id: 'l4a', text: '失望係期望落空，傷心係難過 💭', textEn: 'Disappointed is unmet expectations, sad is feeling hurt 💭', score: 3 },
       { id: 'l4b', text: '都係唔開心 😢', textEn: 'Both are unhappy 😢', score: 2 },
@@ -266,6 +272,7 @@ export const questions: Question[] = [
     questionText: '你想多謝朋友幫你，你會點做？',
     questionTextEn: 'You want to thank a friend for helping you. What do you do?',
     icon: '🙏',
+    videoUrl: '/videos/q17.mp4',
     options: [
       { id: 'e3a', text: '直接講多謝同點解 💬', textEn: 'Say thanks and explain why 💬', score: 3 },
       { id: 'e3b', text: '話聲多謝 👋', textEn: 'Just say thanks 👋', score: 2 },
@@ -279,6 +286,7 @@ export const questions: Question[] = [
     questionText: '當你嬲緊，你會點樣話俾人知？',
     questionTextEn: 'When you are angry, how do you let others know?',
     icon: '😠',
+    videoUrl: '/videos/q18.mp4',
     options: [
       { id: 'e4a', text: '平靜咁講我嬲咗 🗣️', textEn: 'Calmly say I am upset 🗣️', score: 3 },
       { id: 'e4b', text: '臉色會變差 😤', textEn: 'My face shows it 😤', score: 2 },
@@ -322,6 +330,7 @@ export const questions: Question[] = [
     questionText: '考試前好緊張，你會點做？',
     questionTextEn: 'You feel nervous before an exam. What do you do?',
     icon: '📚',
+    videoUrl: '/videos/q19.mp4',
     options: [
       { id: 'g3a', text: '深呼吸，同自己講會OK 💪', textEn: 'Deep breaths, tell myself it will be OK 💪', score: 3 },
       { id: 'g3b', text: '諗吓其他嘢分散注意 🎮', textEn: 'Think of other things to distract 🎮', score: 2 },
@@ -335,6 +344,7 @@ export const questions: Question[] = [
     questionText: '當你傷心嘅時候，你識唔識令自己好返？',
     questionTextEn: 'When you are sad, can you help yourself feel better?',
     icon: '🌈',
+    videoUrl: '/videos/q20.mp4',
     options: [
       { id: 'g4a', text: '識，我有好多方法 🌟', textEn: 'Yes, I have many ways 🌟', score: 3 },
       { id: 'g4b', text: '有時得，有時唔得 🤔', textEn: 'Sometimes yes, sometimes no 🤔', score: 2 },

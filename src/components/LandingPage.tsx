@@ -105,11 +105,14 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 <h2 className="text-xl font-bold mb-2">
                   {t('邊個可以玩？', 'Who can play?')}
                 </h2>
-                <p className="text-muted-foreground leading-relaxed mb-3">
-                  <strong className="text-primary">
-                    {t('小一至小六', 'Grade 1-6')}
-                  </strong> {t('嘅同學仔（7-12歲）', 'students (ages 7-12)')}
-                </p>
+                <div className="mb-3">
+                  <p className="text-2xl font-bold text-primary mb-1">
+                    {t('小學生！🎒', 'Primary School Students! 🎒')}
+                  </p>
+                  <p className="text-muted-foreground">
+                    {t('小一至小六都啱玩 ✨', 'Suitable for Grade 1 to Grade 6 ✨')}
+                  </p>
+                </div>
                 <div className="flex items-center gap-2 p-3 rounded-xl bg-muted/50">
                   <BookOpen className="w-5 h-5 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">
