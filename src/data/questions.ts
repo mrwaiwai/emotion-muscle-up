@@ -19,6 +19,7 @@ export interface Question {
   questionText: string;
   questionTextEn?: string;
   icon?: string;
+  videoUrl?: string;
   options: QuestionOption[];
 }
 
@@ -64,6 +65,7 @@ export const questions: Question[] = [
     questionText: '同學一個人坐喺角落唔出聲，你覺得佢點呀？',
     questionTextEn: '睇吓人哋感受',
     icon: '👀',
+    videoUrl: '/videos/q1.mp4',
     options: [
       { id: 'r1a', text: '佢可能唔開心 😢', score: 3 },
       { id: 'r1b', text: '佢想靜吓 🤫', score: 2 },
@@ -77,6 +79,7 @@ export const questions: Question[] = [
     questionText: '你唔開心嘅時候，你會知道嗎？',
     questionTextEn: '留意自己感受',
     icon: '💭',
+    videoUrl: '/videos/q2.mp4',
     options: [
       { id: 'r2a', text: '會呀，我好快就知 ✓', score: 3 },
       { id: 'r2b', text: '有時知，有時唔知 🤔', score: 2 },
@@ -92,6 +95,7 @@ export const questions: Question[] = [
     questionText: '朋友突然唔理你，你會點諗？',
     questionTextEn: '明白點解會咁',
     icon: '🤔',
+    videoUrl: '/videos/q3.mp4',
     options: [
       { id: 'u1a', text: '可能佢今日心情唔好 💭', score: 3 },
       { id: 'u1b', text: '可能佢好忙 ⏰', score: 2 },
@@ -105,6 +109,7 @@ export const questions: Question[] = [
     questionText: '你嬲嘅時候，知唔知自己點解嬲？',
     questionTextEn: '了解自己情緒',
     icon: '❓',
+    videoUrl: '/videos/q4.mp4',
     options: [
       { id: 'u2a', text: '知呀，我明白原因 💡', score: 3 },
       { id: 'u2b', text: '有時知，有時唔清楚 🤷', score: 2 },
@@ -120,6 +125,7 @@ export const questions: Question[] = [
     questionText: '考試攞到好成績，你會點形容心情？',
     questionTextEn: '講出感受',
     icon: '🏷️',
+    videoUrl: '/videos/q5.mp4',
     options: [
       { id: 'l1a', text: '開心、驕傲、滿足 🎉', score: 3 },
       { id: 'l1b', text: '好高興 😊', score: 2 },
@@ -133,6 +139,7 @@ export const questions: Question[] = [
     questionText: '「緊張」同「驚」係咪一樣㗎？',
     questionTextEn: '分辨唔同感受',
     icon: '📝',
+    videoUrl: '/videos/q6.mp4',
     options: [
       { id: 'l2a', text: '唔一樣，係兩種感覺 ✓', score: 3 },
       { id: 'l2b', text: '有啲似，但唔同 🤔', score: 2 },
@@ -148,6 +155,7 @@ export const questions: Question[] = [
     questionText: '你覺得委屈嘅時候，會點做？',
     questionTextEn: '講出感受',
     icon: '💬',
+    videoUrl: '/videos/q7.mp4',
     options: [
       { id: 'e1a', text: '搵人傾吓 🗣️', score: 3 },
       { id: 'e1b', text: '自己諗辦法 💭', score: 2 },
@@ -161,6 +169,7 @@ export const questions: Question[] = [
     questionText: '同人講自己嘅感受，容唔容易？',
     questionTextEn: '分享心情',
     icon: '🗣️',
+    videoUrl: '/videos/q8.mp4',
     options: [
       { id: 'e2a', text: '好容易，我鍾意分享 💚', score: 3 },
       { id: 'e2b', text: '有時易，有時難 🤔', score: 2 },
@@ -176,6 +185,7 @@ export const questions: Question[] = [
     questionText: '好嬲嘅時候，你會點樣冷靜返？',
     questionTextEn: '令自己冷靜',
     icon: '🧘',
+    videoUrl: '/videos/q9.mp4',
     options: [
       { id: 'g1a', text: '深呼吸、數數或者行開吓 🌬️', score: 3 },
       { id: 'g1b', text: '等一陣就好返 ⏳', score: 2 },
@@ -189,6 +199,7 @@ export const questions: Question[] = [
     questionText: '如果事情唔係你想咁，你接受到嗎？',
     questionTextEn: '接受變化',
     icon: '🔄',
+    videoUrl: '/videos/q10.mp4',
     options: [
       { id: 'g2a', text: '可以，我會諗其他辦法 💪', score: 3 },
       { id: 'g2b', text: '要啲時間，但OK 🕐', score: 2 },

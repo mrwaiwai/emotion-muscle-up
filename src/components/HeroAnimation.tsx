@@ -1,9 +1,6 @@
 import { motion } from 'framer-motion';
 
 export function HeroAnimation() {
-  // Use direct URL reference for video to avoid import issues
-  const videoSrc = '/hero-animation.mp4';
-
   return (
     <motion.div
       className="relative w-full max-w-2xl mx-auto mb-6 rounded-3xl overflow-hidden shadow-soft"
@@ -23,7 +20,7 @@ export function HeroAnimation() {
         className="w-full h-auto rounded-3xl"
         style={{ aspectRatio: '16/9' }}
       >
-        <source src={videoSrc} type="video/mp4" />
+        <source src="/videos/hero.mp4" type="video/mp4" />
       </video>
       
       {/* Floating decorations */}
