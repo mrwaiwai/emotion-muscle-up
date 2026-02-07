@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Question } from '@/data/questions';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useShuffledOptions } from '@/hooks/useShuffledOptions';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface QuestionCardProps {
   question: Question;
@@ -32,6 +34,9 @@ export function QuestionCard({
   onPrev,
   onComplete,
 }: QuestionCardProps) {
+  const { language, t } = useLanguage();
+  const shuffledOptions = useShuffledOptions(question.id, question.options);
+  
   const skillColors: Record<string, string> = {
     recognizing: 'from-emotion-recognizing/20 to-emotion-recognizing/5',
     understanding: 'from-emotion-understanding/20 to-emotion-understanding/5',
@@ -91,18 +96,26 @@ export function QuestionCard({
                 </motion.span>
                 <div className="flex-1">
                   <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-white/50 text-muted-foreground mb-2">
-                    {question.questionTextEn}
+                    {language === 'en' && question.questionTextEn 
+                      ? `Q${questionIndex + 1}` 
+                      : question.questionTextEn || `Q${questionIndex + 1}`}
                   </span>
                   <h2 className="text-xl md:text-2xl font-bold leading-relaxed">
-                    {question.questionText}
+                    {language === 'en' && question.questionTextEn 
+                      ? question.questionTextEn 
+                      : question.questionText}
                   </h2>
                 </div>
               </div>
 
-              {/* Options */}
+              {/* Options - Shuffled */}
               <div className="space-y-3">
-                {question.options.map((option, index) => {
+                {shuffledOptions.map((option, index) => {
                   const isSelected = selectedAnswer === option.score;
+                  const optionText = language === 'en' && option.textEn 
+                    ? option.textEn 
+                    : option.text;
+                  
                   return (
                     <motion.button
                       key={option.id}
@@ -126,7 +139,7 @@ export function QuestionCard({
                         {isSelected ? <Check className="w-5 h-5" /> : String.fromCharCode(65 + index)}
                       </span>
                       <span className="flex-1 text-left text-lg font-medium">
-                        {option.text}
+                        {optionText}
                       </span>
                     </motion.button>
                   );
@@ -151,7 +164,7 @@ export function QuestionCard({
             className="h-14 px-6 rounded-xl text-base"
           >
             <ChevronLeft className="w-5 h-5 mr-1" />
-            上一題
+            {t('上一題', 'Previous')}
           </Button>
 
           {isLastQuestion ? (
@@ -161,7 +174,7 @@ export function QuestionCard({
               disabled={!hasAnswer}
               className="h-14 px-8 rounded-xl bg-primary-gradient text-primary-foreground text-base"
             >
-              完成啦！✨
+              {t('完成啦！✨', 'Done! ✨')}
             </Button>
           ) : (
             <Button
@@ -170,7 +183,7 @@ export function QuestionCard({
               disabled={!hasAnswer}
               className="h-14 px-6 rounded-xl text-base"
             >
-              下一題
+              {t('下一題', 'Next')}
               <ChevronRight className="w-5 h-5 ml-1" />
             </Button>
           )}
