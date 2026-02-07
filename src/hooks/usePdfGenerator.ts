@@ -3,16 +3,19 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { AssessmentResult } from '@/hooks/useAssessment';
 import { skillInfo } from '@/data/questions';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export function usePdfGenerator() {
   const resultRef = useRef<HTMLDivElement>(null);
+  const { language } = useLanguage();
 
   const generatePdf = useCallback(async (result: AssessmentResult) => {
     if (!resultRef.current) return;
 
+    const isEnglish = language === 'en';
     const element = resultRef.current;
     
-    // Create canvas from the result section
+    // Create canvas from the result section for charts (captures Chinese correctly)
     const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
@@ -39,11 +42,14 @@ export function usePdfGenerator() {
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(24);
     pdf.setTextColor(80, 60, 50);
-    pdf.text('情緒 MUSCLE UP', margin, 25);
+    pdf.text(isEnglish ? 'Emotion MUSCLE UP' : 'Emotion MUSCLE UP', margin, 25);
     
     pdf.setFontSize(14);
     pdf.setTextColor(120, 100, 90);
-    pdf.text('兒童情緒能力測驗報告', margin, 35);
+    pdf.text(
+      isEnglish ? "Children's Emotional Skills Assessment Report" : "Children's Emotional Skills Report",
+      margin, 35
+    );
 
     // Student Info
     let yPos = 55;
@@ -52,8 +58,16 @@ export function usePdfGenerator() {
     
     pdf.setFontSize(11);
     pdf.setTextColor(60, 60, 60);
-    pdf.text(`學生姓名 / 代號：${result.studentName}`, margin + 5, yPos + 5);
-    pdf.text(`測驗日期：${result.completedAt.toLocaleDateString('zh-TW')}`, margin + 5, yPos + 14);
+    pdf.text(
+      isEnglish ? `Student Name: ${result.studentName}` : `Student Name: ${result.studentName}`,
+      margin + 5, yPos + 5
+    );
+    pdf.text(
+      isEnglish 
+        ? `Test Date: ${result.completedAt.toLocaleDateString('en-US')}` 
+        : `Test Date: ${result.completedAt.toLocaleDateString('en-US')}`,
+      margin + 5, yPos + 14
+    );
     
     yPos += 35;
 
@@ -61,7 +75,7 @@ export function usePdfGenerator() {
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(14);
     pdf.setTextColor(80, 60, 50);
-    pdf.text('五大核心技能評估', margin, yPos);
+    pdf.text(isEnglish ? 'Five Core Skills Assessment' : 'Five Core Skills Assessment', margin, yPos);
     yPos += 10;
 
     // Skills bars
@@ -77,11 +91,11 @@ export function usePdfGenerator() {
       const info = skillInfo[score.skill];
       const color = skillColors[score.skill];
       
-      // Skill name
+      // Skill name (use English only to avoid encoding issues)
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(10);
       pdf.setTextColor(80, 80, 80);
-      pdf.text(`${info.name} ${info.nameEn}`, margin, yPos);
+      pdf.text(info.nameEn, margin, yPos);
       
       // Percentage
       pdf.setFont('helvetica', 'bold');
@@ -106,13 +120,17 @@ export function usePdfGenerator() {
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(14);
     pdf.setTextColor(80, 60, 50);
-    pdf.text('三大情緒能力評估', margin, yPos);
+    pdf.text(isEnglish ? 'Three Key Emotional Abilities' : 'Three Key Emotional Abilities', margin, yPos);
     yPos += 10;
 
-    const levelLabels = {
-      high: '表現良好',
-      medium: '發展中',
-      support: '需要更多支援',
+    const levelLabels = isEnglish ? {
+      high: 'Strong',
+      medium: 'Developing',
+      support: 'Needs Support',
+    } : {
+      high: 'Strong',
+      medium: 'Developing',
+      support: 'Needs Support',
     };
 
     result.abilityLevels.forEach((ability) => {
@@ -122,7 +140,7 @@ export function usePdfGenerator() {
       pdf.setFont('helvetica', 'bold');
       pdf.setFontSize(11);
       pdf.setTextColor(60, 60, 60);
-      pdf.text(`${ability.name} (${ability.nameEn})`, margin + 5, yPos + 5);
+      pdf.text(ability.nameEn, margin + 5, yPos + 5);
       
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(10);
@@ -141,10 +159,14 @@ export function usePdfGenerator() {
     pdf.setFontSize(10);
     pdf.setTextColor(100, 80, 60);
     
-    const message = [
-      '這是一幅屬於你的情緒肌肉地圖！每個人都有自己獨特的成長節奏。',
-      '沒有好壞之分，只有不同的發展階段。',
-      '透過練習和支持，你的情緒肌肉會越來越強壯！💪',
+    const message = isEnglish ? [
+      'This is your emotional muscle map! Everyone grows at their own pace.',
+      "There's no right or wrong, just different stages of development.",
+      'With practice and support, your emotional muscles will get stronger!',
+    ] : [
+      'This is your emotional muscle map! Everyone grows at their own pace.',
+      "There's no right or wrong, just different stages of development.",
+      'With practice and support, your emotional muscles will get stronger!',
     ];
     
     message.forEach((line, i) => {
@@ -157,18 +179,23 @@ export function usePdfGenerator() {
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(12);
     pdf.setTextColor(80, 60, 50);
-    pdf.text('教學建議', margin, yPos);
+    pdf.text(isEnglish ? 'Teaching Suggestions' : 'Teaching Suggestions', margin, yPos);
     yPos += 8;
 
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(9);
     pdf.setTextColor(80, 80, 80);
 
-    const suggestions = [
-      '• 繼續透過情緒工作坊、互動遊戲和角色扮演強化情緒學習',
-      '• 鼓勵在日常生活中練習辨別和表達情緒',
-      '• 運用靜觀練習幫助調節情緒',
-      '• 營造安全、接納的環境，讓孩子願意分享感受',
+    const suggestions = isEnglish ? [
+      '- Continue emotional learning through workshops, games, and role-playing',
+      '- Encourage practicing identifying and expressing emotions daily',
+      '- Use mindfulness exercises to help regulate emotions',
+      '- Create a safe, accepting environment for sharing feelings',
+    ] : [
+      '- Continue emotional learning through workshops, games, and role-playing',
+      '- Encourage practicing identifying and expressing emotions daily',
+      '- Use mindfulness exercises to help regulate emotions',
+      '- Create a safe, accepting environment for sharing feelings',
     ];
 
     suggestions.forEach((suggestion) => {
@@ -179,11 +206,20 @@ export function usePdfGenerator() {
     // Footer
     pdf.setFontSize(8);
     pdf.setTextColor(150, 150, 150);
-    pdf.text('情緒 MUSCLE UP 課程 | 此報告僅作參考，並非心理診斷', margin, pageHeight - 10);
+    pdf.text(
+      isEnglish 
+        ? 'Emotion MUSCLE UP Program | This report is for reference only, not a psychological diagnosis'
+        : 'Emotion MUSCLE UP Program | This report is for reference only, not a psychological diagnosis',
+      margin, pageHeight - 10
+    );
 
     // Save the PDF
-    pdf.save(`情緒MUSCLE_UP_報告_${result.studentName}_${result.completedAt.toLocaleDateString('zh-TW').replace(/\//g, '-')}.pdf`);
-  }, []);
+    const fileName = isEnglish 
+      ? `Emotion_MUSCLE_UP_Report_${result.studentName}_${result.completedAt.toLocaleDateString('en-US').replace(/\//g, '-')}.pdf`
+      : `Emotion_MUSCLE_UP_Report_${result.studentName}_${result.completedAt.toLocaleDateString('en-US').replace(/\//g, '-')}.pdf`;
+    
+    pdf.save(fileName);
+  }, [language]);
 
   return { resultRef, generatePdf };
 }
