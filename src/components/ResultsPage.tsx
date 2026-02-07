@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { AssessmentResult } from '@/hooks/useAssessment';
 import { usePdfGenerator } from '@/hooks/usePdfGenerator';
 import { Download, RotateCcw, Sparkles, Heart, Star } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ResultsPageProps {
   result: AssessmentResult;
@@ -15,6 +16,7 @@ interface ResultsPageProps {
 
 export function ResultsPage({ result, onReset }: ResultsPageProps) {
   const { resultRef, generatePdf } = usePdfGenerator();
+  const { t } = useLanguage();
 
   const handleDownloadPdf = () => {
     generatePdf(result);
@@ -56,10 +58,12 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           </motion.div>
           
           <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-            好叻呀，<span className="gradient-text">{result.studentName}</span>！
+            {t('好叻呀，', 'Great job, ')}
+            <span className="gradient-text">{result.studentName}</span>
+            {t('！', '!')}
           </h1>
           <p className="text-lg text-muted-foreground">
-            你完成咗情緒 MUSCLE UP 測驗喇！
+            {t('你完成咗情緒 MUSCLE UP 測驗喇！', 'You completed the Emotion MUSCLE UP quiz!')}
           </p>
         </motion.div>
 
@@ -69,10 +73,12 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           <GlassCard className="p-6 mb-6">
             <div className="flex items-center gap-3 mb-4">
               <Sparkles className="w-6 h-6 text-primary" />
-              <h2 className="text-xl font-bold">你嘅情緒肌肉地圖 🗺️</h2>
+              <h2 className="text-xl font-bold">
+                {t('你嘅情緒肌肉地圖 🗺️', 'Your Emotional Muscle Map 🗺️')}
+              </h2>
             </div>
             <p className="text-muted-foreground mb-4">
-              呢個圖顯示你喺五種情緒技能嘅表現
+              {t('呢個圖顯示你喺五種情緒技能嘅表現', 'This chart shows your performance in five emotional skills')}
             </p>
             <SkillsRadarChart skillScores={result.skillScores} />
           </GlassCard>
@@ -81,7 +87,9 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           <GlassCard className="p-6 mb-6">
             <div className="flex items-center gap-3 mb-4">
               <Star className="w-6 h-6 text-emotion-labeling" />
-              <h2 className="text-xl font-bold">五種情緒技能</h2>
+              <h2 className="text-xl font-bold">
+                {t('五種情緒技能', 'Five Emotional Skills')}
+              </h2>
             </div>
             <SkillBars skillScores={result.skillScores} />
           </GlassCard>
@@ -90,7 +98,9 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           <GlassCard className="p-6 mb-6">
             <div className="flex items-center gap-3 mb-4">
               <Heart className="w-6 h-6 text-emotion-recognizing" />
-              <h2 className="text-xl font-bold">三大情緒能力</h2>
+              <h2 className="text-xl font-bold">
+                {t('三大情緒能力', 'Three Key Emotional Abilities')}
+              </h2>
             </div>
             <AbilityCards abilityLevels={result.abilityLevels} />
           </GlassCard>
@@ -105,17 +115,19 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           >
             <p className="text-lg leading-relaxed mb-4">
               <span className="text-2xl mr-2">🌟</span>
-              呢個係屬於你嘅<strong className="text-primary">情緒肌肉地圖</strong>！
-              <br />
-              每個人都有自己嘅成長速度，<strong>冇分好壞</strong>，只係唔同階段。
-              <br />
-              繼續練習，你嘅情緒肌肉會越嚟越強！
+              {t(
+                '呢個係屬於你嘅情緒肌肉地圖！每個人都有自己嘅成長速度，冇分好壞，只係唔同階段。繼續練習，你嘅情緒肌肉會越嚟越強！',
+                "This is your emotional muscle map! Everyone grows at their own pace, there's no right or wrong, just different stages. Keep practicing, and your emotional muscles will get stronger!"
+              )}
               <span className="text-2xl ml-2">💪</span>
             </p>
             
             <div className="p-4 rounded-xl bg-muted/30 text-sm text-muted-foreground">
               <p>
-                💡 測驗只係起點，真正嘅成長會喺課堂活動、工作坊同練習入面發生！
+                {t(
+                  '💡 測驗只係起點，真正嘅成長會喺課堂活動、工作坊同練習入面發生！',
+                  '💡 The quiz is just the beginning, real growth happens in classroom activities, workshops, and practice!'
+                )}
               </p>
             </div>
           </motion.div>
@@ -134,7 +146,7 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
             className="h-14 px-8 rounded-xl bg-primary-gradient text-primary-foreground"
           >
             <Download className="w-5 h-5 mr-2" />
-            下載老師報告 PDF
+            {t('下載老師報告 PDF', 'Download Teacher Report PDF')}
           </Button>
           
           <Button
@@ -144,7 +156,7 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
             className="h-14 px-8 rounded-xl"
           >
             <RotateCcw className="w-5 h-5 mr-2" />
-            再做一次
+            {t('再做一次', 'Try Again')}
           </Button>
         </motion.div>
 
@@ -155,7 +167,10 @@ export function ResultsPage({ result, onReset }: ResultsPageProps) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          ⚠️ 呢個測驗只係參考，唔係心理診斷。如有疑問，請諮詢專業人士。
+          {t(
+            '⚠️ 呢個測驗只係參考，唔係心理診斷。如有疑問，請諮詢專業人士。',
+            '⚠️ This quiz is for reference only, not a psychological diagnosis. Please consult professionals if needed.'
+          )}
         </motion.p>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { HeroAnimation } from './HeroAnimation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Heart, Sparkles, ArrowRight, BookOpen, Users, Star } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface LandingPageProps {
   onStart: (name: string) => void;
@@ -13,6 +14,7 @@ interface LandingPageProps {
 export function LandingPage({ onStart }: LandingPageProps) {
   const [name, setName] = useState('');
   const [showNameInput, setShowNameInput] = useState(false);
+  const { t } = useLanguage();
 
   const handleStart = () => {
     if (showNameInput && name.trim()) {
@@ -23,18 +25,18 @@ export function LandingPage({ onStart }: LandingPageProps) {
   };
 
   const stages = [
-    { name: 'Show up', desc: '勇敢面對', icon: '💪' },
-    { name: 'Step out', desc: '踏出一步', icon: '🚀' },
-    { name: 'Value', desc: '跟住內心', icon: '❤️' },
-    { name: 'Move on', desc: '繼續向前', icon: '✨' },
+    { name: 'Show up', desc: t('勇敢面對', 'Face it'), icon: '💪' },
+    { name: 'Step out', desc: t('踏出一步', 'Take a step'), icon: '🚀' },
+    { name: 'Value', desc: t('跟住內心', 'Follow heart'), icon: '❤️' },
+    { name: 'Move on', desc: t('繼續向前', 'Move forward'), icon: '✨' },
   ];
 
   const skills = [
-    { name: '辨別 Recognizing', color: 'bg-skill-recognizing' },
-    { name: '理解 Understanding', color: 'bg-skill-understanding' },
-    { name: '標記 Labeling', color: 'bg-skill-labeling' },
-    { name: '表達 Expressing', color: 'bg-skill-expressing' },
-    { name: '調節 Regulating', color: 'bg-skill-regulating' },
+    { name: t('辨別 Recognizing', 'Recognizing'), color: 'bg-skill-recognizing' },
+    { name: t('理解 Understanding', 'Understanding'), color: 'bg-skill-understanding' },
+    { name: t('標記 Labeling', 'Labeling'), color: 'bg-skill-labeling' },
+    { name: t('表達 Expressing', 'Expressing'), color: 'bg-skill-expressing' },
+    { name: t('調節 Regulating', 'Regulating'), color: 'bg-skill-regulating' },
   ];
 
   return (
@@ -53,7 +55,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <span className="gradient-text">情緒 MUSCLE UP</span>
+            <span className="gradient-text">
+              {t('情緒 MUSCLE UP', 'Emotion MUSCLE UP')}
+            </span>
           </motion.h1>
           
           <motion.p
@@ -62,7 +66,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            兒童情緒能力測驗 💪🧠❤️
+            {t('兒童情緒能力測驗 💪🧠❤️', "Children's Emotional Skills Assessment 💪🧠❤️")}
           </motion.p>
         </div>
 
@@ -78,12 +82,14 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 <Heart className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h2 className="text-xl font-bold mb-2">呢個測驗係咩嚟㗎？</h2>
+                <h2 className="text-xl font-bold mb-2">
+                  {t('呢個測驗係咩嚟㗎？', 'What is this quiz?')}
+                </h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  我哋會一齊探索你嘅<strong>情緒肌肉</strong>！
-                  睇吓你喺認識同處理情緒方面做得點。
-                  記住：<span className="text-primary font-semibold">冇分好壞</span>，
-                  每個人都有自己嘅成長速度！
+                  {t(
+                    '我哋會一齊探索你嘅情緒肌肉！睇吓你喺認識同處理情緒方面做得點。記住：冇分好壞，每個人都有自己嘅成長速度！',
+                    "Let's explore your emotional muscles together! See how you handle and understand emotions. Remember: There's no right or wrong, everyone grows at their own pace!"
+                  )}
                 </p>
               </div>
             </div>
@@ -96,14 +102,18 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 <Users className="w-6 h-6 text-accent-foreground" />
               </div>
               <div>
-                <h2 className="text-xl font-bold mb-2">邊個可以玩？</h2>
+                <h2 className="text-xl font-bold mb-2">
+                  {t('邊個可以玩？', 'Who can play?')}
+                </h2>
                 <p className="text-muted-foreground leading-relaxed mb-3">
-                  <strong className="text-primary">小一至小六</strong> 嘅同學仔（7-12歲）
+                  <strong className="text-primary">
+                    {t('小一至小六', 'Grade 1-6')}
+                  </strong> {t('嘅同學仔（7-12歲）', 'students (ages 7-12)')}
                 </p>
                 <div className="flex items-center gap-2 p-3 rounded-xl bg-muted/50">
                   <BookOpen className="w-5 h-5 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">
-                    ⚠️ 呢個只係參考，唔係心理測試
+                    {t('⚠️ 呢個只係參考，唔係心理測試', '⚠️ This is for reference only, not a psychological test')}
                   </span>
                 </div>
               </div>
@@ -115,7 +125,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
         <GlassCard className="p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
             <Sparkles className="w-6 h-6 text-primary" />
-            <h2 className="text-xl font-bold">我哋會睇呢 5 種情緒技能</h2>
+            <h2 className="text-xl font-bold">
+              {t('我哋會睇呢 5 種情緒技能', "We'll look at these 5 emotional skills")}
+            </h2>
           </div>
           <div className="flex flex-wrap gap-2 mb-6">
             {skills.map((skill, index) => (
@@ -133,7 +145,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
           
           <h3 className="font-bold mb-3 flex items-center gap-2">
             <Star className="w-5 h-5 text-emotion-labeling" />
-            四個成長階段
+            {t('四個成長階段', 'Four Growth Stages')}
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {stages.map((stage, index) => (
@@ -160,8 +172,10 @@ export function LandingPage({ onStart }: LandingPageProps) {
             transition={{ delay: 0.9 }}
           >
             <p className="text-lg text-muted-foreground mb-6">
-              大約 <strong className="text-primary">5-10 分鐘</strong> 就做完，
-              準備好未？🎯
+              {t(
+                '大約 5-10 分鐘 就做完，準備好未？🎯',
+                'Takes about 5-10 minutes to complete. Ready? 🎯'
+              )}
             </p>
 
             {showNameInput && (
@@ -172,11 +186,11 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 transition={{ duration: 0.3 }}
               >
                 <label className="block text-left font-medium mb-2">
-                  你叫咩名？👋
+                  {t('你叫咩名？👋', "What's your name? 👋")}
                 </label>
                 <Input
                   type="text"
-                  placeholder="例如：小明"
+                  placeholder={t('例如：小明', 'e.g., Alex')}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="text-lg h-14 rounded-xl border-2 border-primary/20 focus:border-primary"
@@ -190,7 +204,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
               disabled={showNameInput && !name.trim()}
               className="touch-button bg-primary-gradient text-primary-foreground text-xl px-12"
             >
-              {showNameInput ? '開始啦！' : '我準備好喇！'}
+              {showNameInput 
+                ? t('開始啦！', "Let's Go!") 
+                : t('我準備好喇！', "I'm Ready!")}
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </motion.div>
