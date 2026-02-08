@@ -13,8 +13,8 @@ Deno.serve(async (req) => {
   try {
     const { username, password } = await req.json()
 
-    // Validate credentials
-    if (username !== 'Admin' || password !== 'ISE1234') {
+    // Validate credentials (case-insensitive username)
+    if (username.toLowerCase() !== 'admin' || password !== 'ISE1234') {
       return new Response(
         JSON.stringify({ error: 'Invalid setup credentials' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
