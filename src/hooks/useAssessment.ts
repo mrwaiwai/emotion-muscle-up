@@ -1,5 +1,7 @@
-import { useState, useCallback } from 'react';
-import { questions, Question, SkillType, skillInfo, emotionAbilityInfo } from '@/data/questions';
+import { useState, useCallback, useRef } from 'react';
+import { questions, Question, SkillType, emotionAbilityInfo } from '@/data/questions';
+import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export interface SkillScore {
   skill: SkillType;
@@ -29,18 +31,50 @@ export function useAssessment() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [studentName, setStudentName] = useState('');
+  const [studentClass, setStudentClass] = useState('');
+  const [schoolName, setSchoolName] = useState('');
   const [result, setResult] = useState<AssessmentResult | null>(null);
+  const sessionIdRef = useRef<string | null>(null);
+  const startTimeRef = useRef<Date | null>(null);
+  const { language } = useLanguage();
 
   const currentQuestion: Question | undefined = questions[currentQuestionIndex];
   const totalQuestions = questions.length;
   const progress = ((currentQuestionIndex) / totalQuestions) * 100;
 
-  const startAssessment = useCallback((name: string) => {
+  const startAssessment = useCallback(async (name: string, studentClassInput?: string, schoolInput?: string) => {
     setStudentName(name);
+    setStudentClass(studentClassInput || '');
+    setSchoolName(schoolInput || '');
     setCurrentQuestionIndex(0);
     setAnswers({});
+    startTimeRef.current = new Date();
+
+    // Create session in database
+    try {
+      const { data, error } = await supabase
+        .from('assessment_sessions')
+        .insert([{
+          student_name: name,
+          student_class: studentClassInput || null,
+          school_name: schoolInput || null,
+          language: language,
+          started_at: new Date().toISOString(),
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating session:', error);
+      } else if (data) {
+        sessionIdRef.current = data.id;
+      }
+    } catch (err) {
+      console.error('Error creating session:', err);
+    }
+
     setPhase('assessment');
-  }, []);
+  }, [language]);
 
   const answerQuestion = useCallback((questionId: string, score: number) => {
     setAnswers(prev => ({ ...prev, [questionId]: score }));
@@ -128,18 +162,85 @@ export function useAssessment() {
     };
   }, [answers, studentName]);
 
-  const completeAssessment = useCallback(() => {
+  const saveAnswersToDatabase = useCallback(async (results: AssessmentResult) => {
+    if (!sessionIdRef.current) return;
+
+    try {
+      // Calculate duration
+      const endTime = new Date();
+      const durationSeconds = startTimeRef.current 
+        ? Math.round((endTime.getTime() - startTimeRef.current.getTime()) / 1000)
+        : null;
+
+      // Calculate total score
+      const totalScore = Math.round(
+        results.skillScores.reduce((sum, s) => sum + s.percentage, 0) / results.skillScores.length
+      );
+
+      // Update session with scores
+      await supabase
+        .from('assessment_sessions')
+        .update({
+          completed_at: endTime.toISOString(),
+          duration_seconds: durationSeconds,
+          score_recognizing: results.skillScores.find(s => s.skill === 'recognizing')?.percentage,
+          score_understanding: results.skillScores.find(s => s.skill === 'understanding')?.percentage,
+          score_labeling: results.skillScores.find(s => s.skill === 'labeling')?.percentage,
+          score_expressing: results.skillScores.find(s => s.skill === 'expressing')?.percentage,
+          score_regulating: results.skillScores.find(s => s.skill === 'regulating')?.percentage,
+          ability_resilience: results.abilityLevels.find(a => a.nameEn === 'Emotional Resilience')?.percentage,
+          ability_agility: results.abilityLevels.find(a => a.nameEn === 'Emotional Agility')?.percentage,
+          ability_literacy: results.abilityLevels.find(a => a.nameEn === 'Emotional Literacy')?.percentage,
+          total_score: totalScore,
+        })
+        .eq('id', sessionIdRef.current);
+
+      // Save individual answers
+      const answerRecords = questions.map(q => {
+        const selectedScore = answers[q.id] || 1;
+        const selectedOption = q.options.find(o => o.score === selectedScore) || q.options[0];
+        
+        return {
+          session_id: sessionIdRef.current!,
+          question_id: q.id,
+          question_text: q.questionText,
+          selected_option_id: selectedOption.id,
+          selected_option_text: selectedOption.text,
+          score: selectedScore,
+          max_score: 3,
+          skill_type: q.skill,
+        };
+      });
+
+      await supabase
+        .from('assessment_answers')
+        .insert(answerRecords);
+
+    } catch (error) {
+      console.error('Error saving results:', error);
+    }
+  }, [answers]);
+
+  const completeAssessment = useCallback(async () => {
     const results = calculateResults();
     setResult(results);
+    
+    // Save to database
+    await saveAnswersToDatabase(results);
+    
     setPhase('results');
-  }, [calculateResults]);
+  }, [calculateResults, saveAnswersToDatabase]);
 
   const resetAssessment = useCallback(() => {
     setPhase('landing');
     setCurrentQuestionIndex(0);
     setAnswers({});
     setStudentName('');
+    setStudentClass('');
+    setSchoolName('');
     setResult(null);
+    sessionIdRef.current = null;
+    startTimeRef.current = null;
   }, []);
 
   const isCurrentQuestionAnswered = currentQuestion ? answers[currentQuestion.id] !== undefined : false;
@@ -153,6 +254,8 @@ export function useAssessment() {
     progress,
     answers,
     studentName,
+    studentClass,
+    schoolName,
     result,
     isCurrentQuestionAnswered,
     isLastQuestion,
@@ -162,5 +265,7 @@ export function useAssessment() {
     prevQuestion,
     completeAssessment,
     resetAssessment,
+    setStudentClass,
+    setSchoolName,
   };
 }
