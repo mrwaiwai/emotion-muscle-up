@@ -2,8 +2,9 @@ import { AnimatePresence } from 'framer-motion';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { LandingPage } from '@/components/LandingPage';
 import { QuestionCard } from '@/components/QuestionCard';
-import { ResultsPage } from '@/components/ResultsPage';
+import { ResultsPrototypeSelector } from '@/components/results/ResultsPrototypeSelector';
 import { useAssessment } from '@/hooks/useAssessment';
+import { usePdfGenerator } from '@/hooks/usePdfGenerator';
 
 const Index = () => {
   const {
@@ -23,6 +24,14 @@ const Index = () => {
     completeAssessment,
     resetAssessment,
   } = useAssessment();
+
+  const { generatePdf } = usePdfGenerator();
+
+  const handleDownloadPdf = () => {
+    if (result) {
+      generatePdf(result);
+    }
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -50,7 +59,12 @@ const Index = () => {
         )}
         
         {phase === 'results' && result && (
-          <ResultsPage key="results" result={result} onReset={resetAssessment} />
+          <ResultsPrototypeSelector 
+            key="results" 
+            result={result} 
+            onReset={resetAssessment}
+            onDownloadPdf={handleDownloadPdf}
+          />
         )}
       </AnimatePresence>
     </div>
