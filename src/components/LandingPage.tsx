@@ -1,24 +1,27 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { GlassCard } from './GlassCard';
 import { HeroAnimation } from './HeroAnimation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Heart, Sparkles, ArrowRight, BookOpen, Users, Star } from 'lucide-react';
+import { Heart, Sparkles, ArrowRight, BookOpen, Users, Star, Settings } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface LandingPageProps {
-  onStart: (name: string) => void;
+  onStart: (name: string, studentClass?: string, schoolName?: string) => void;
 }
 
 export function LandingPage({ onStart }: LandingPageProps) {
   const [name, setName] = useState('');
+  const [studentClass, setStudentClass] = useState('');
+  const [schoolName, setSchoolName] = useState('');
   const [showNameInput, setShowNameInput] = useState(false);
   const { t } = useLanguage();
 
   const handleStart = () => {
     if (showNameInput && name.trim()) {
-      onStart(name.trim());
+      onStart(name.trim(), studentClass.trim() || undefined, schoolName.trim() || undefined);
     } else {
       setShowNameInput(true);
     }
@@ -183,22 +186,50 @@ export function LandingPage({ onStart }: LandingPageProps) {
 
             {showNameInput && (
               <motion.div
-                className="max-w-sm mx-auto mb-6"
+                className="max-w-sm mx-auto mb-6 space-y-4"
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <label className="block text-left font-medium mb-2">
-                  {t('你叫咩名？👋', "What's your name? 👋")}
-                </label>
-                <Input
-                  type="text"
-                  placeholder={t('例如：小明', 'e.g., Alex')}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="text-lg h-14 rounded-xl border-2 border-primary/20 focus:border-primary"
-                  onKeyDown={(e) => e.key === 'Enter' && name.trim() && handleStart()}
-                />
+                <div>
+                  <label className="block text-left font-medium mb-2">
+                    {t('你叫咩名？👋', "What's your name? 👋")}
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder={t('例如：小明', 'e.g., Alex')}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="text-lg h-14 rounded-xl border-2 border-primary/20 focus:border-primary"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-left font-medium mb-2 text-sm">
+                      {t('班級（可選）', 'Class (optional)')}
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder={t('例如：3A', 'e.g., 3A')}
+                      value={studentClass}
+                      onChange={(e) => setStudentClass(e.target.value)}
+                      className="h-12 rounded-xl border-2 border-primary/20 focus:border-primary"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-left font-medium mb-2 text-sm">
+                      {t('學校（可選）', 'School (optional)')}
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder={t('例如：育才小學', 'e.g., ABC School')}
+                      value={schoolName}
+                      onChange={(e) => setSchoolName(e.target.value)}
+                      className="h-12 rounded-xl border-2 border-primary/20 focus:border-primary"
+                      onKeyDown={(e) => e.key === 'Enter' && name.trim() && handleStart()}
+                    />
+                  </div>
+                </div>
               </motion.div>
             )}
 
@@ -214,6 +245,17 @@ export function LandingPage({ onStart }: LandingPageProps) {
             </Button>
           </motion.div>
         </GlassCard>
+
+        {/* Admin Link - Small and discreet */}
+        <div className="text-center mt-4">
+          <Link 
+            to="/admin/login" 
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+          >
+            <Settings className="w-3 h-3" />
+            {t('管理員', 'Admin')}
+          </Link>
+        </div>
       </motion.div>
     </div>
   );

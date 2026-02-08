@@ -252,6 +252,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_submission_rate_limit: { Args: never; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
