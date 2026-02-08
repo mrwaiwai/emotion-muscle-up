@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Edit, Save, X, Video, Upload } from 'lucide-react';
+import { Edit, Save, X, Video, Upload, Play, Eye } from 'lucide-react';
 import { questions as defaultQuestions, Question } from '@/data/questions';
 import { Tables } from '@/integrations/supabase/types';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +27,7 @@ export function AdminQuestionsList() {
   const [loading, setLoading] = useState(true);
   const [editingQuestion, setEditingQuestion] = useState<EditableQuestion | null>(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [previewVideoUrl, setPreviewVideoUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -210,10 +211,13 @@ export function AdminQuestionsList() {
                       {skillLabels[question.skill]}
                     </span>
                     {question.videoUrl && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-muted text-xs">
-                        <Video className="w-3 h-3" />
-                        有影片
-                      </span>
+                      <button
+                        onClick={() => setPreviewVideoUrl(question.videoUrl!)}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary/10 text-primary text-xs hover:bg-primary/20 transition-colors cursor-pointer"
+                      >
+                        <Play className="w-3 h-3" />
+                        預覽影片
+                      </button>
                     )}
                   </div>
                   <p className="font-medium">{question.questionText}</p>
@@ -287,14 +291,42 @@ export function AdminQuestionsList() {
 
                 <div className="space-y-2">
                   <Label>影片網址</Label>
-                  <Input
-                    value={editingQuestion.videoUrl || ''}
-                    onChange={(e) => setEditingQuestion({
-                      ...editingQuestion,
-                      videoUrl: e.target.value,
-                    })}
-                    placeholder="/videos/q1.mp4"
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      value={editingQuestion.videoUrl || ''}
+                      onChange={(e) => setEditingQuestion({
+                        ...editingQuestion,
+                        videoUrl: e.target.value,
+                      })}
+                      placeholder="/videos/q1.mp4"
+                      className="flex-1"
+                    />
+                    {editingQuestion.videoUrl && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setPreviewVideoUrl(editingQuestion.videoUrl!)}
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {/* Inline video preview in edit dialog */}
+                  {editingQuestion.videoUrl && (
+                    <div className="mt-2 rounded-lg overflow-hidden bg-muted/50">
+                      <video
+                        key={editingQuestion.videoUrl}
+                        src={editingQuestion.videoUrl}
+                        className="w-full max-h-48 object-contain"
+                        controls
+                        muted
+                      >
+                        你的瀏覽器不支援影片播放
+                      </video>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -354,6 +386,32 @@ export function AdminQuestionsList() {
                   儲存
                 </Button>
               </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Video Preview Dialog */}
+      <Dialog open={!!previewVideoUrl} onOpenChange={() => setPreviewVideoUrl(null)}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Video className="w-5 h-5" />
+              影片預覽
+            </DialogTitle>
+          </DialogHeader>
+          {previewVideoUrl && (
+            <div className="rounded-lg overflow-hidden bg-black">
+              <video
+                key={previewVideoUrl}
+                src={previewVideoUrl}
+                className="w-full max-h-[60vh] object-contain"
+                controls
+                autoPlay
+                muted
+              >
+                你的瀏覽器不支援影片播放
+              </video>
             </div>
           )}
         </DialogContent>
