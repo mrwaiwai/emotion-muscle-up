@@ -1,35 +1,78 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { GlassCard } from '@/components/GlassCard';
-import { Lock, Mail, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Lock, User, AlertCircle, ArrowLeft, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [setupMode, setSetupMode] = useState(false);
+  const [setupSuccess, setSetupSuccess] = useState(false);
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const adminEmail = 'admin@emotion-assessment.app';
+
+  const handleSetup = async () => {
     setError('');
     setLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('setup-admin', {
+        body: { username, password }
+      });
+
+      if (error) throw error;
+      if (data.error) throw new Error(data.error);
+
+      setSetupSuccess(true);
+      setSetupMode(false);
+      
+      // Auto-login after setup
+      setTimeout(() => handleLogin(), 1000);
+    } catch (err: any) {
+      setError(err.message || '設定失敗');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogin = async () => {
+    setError('');
+    setLoading(true);
+
+    // Map username "Admin" to the admin email
+    const email = username === 'Admin' ? adminEmail : `${username.toLowerCase()}@emotion-assessment.app`;
 
     const { error } = await signIn(email, password);
     
     if (error) {
-      setError(error.message === 'Invalid login credentials' 
-        ? '電郵或密碼錯誤' 
-        : error.message);
+      if (error.message === 'Invalid login credentials') {
+        setError('名稱或密碼錯誤');
+      } else {
+        setError(error.message);
+      }
       setLoading(false);
     } else {
       navigate('/admin');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (setupMode) {
+      await handleSetup();
+    } else {
+      await handleLogin();
     }
   };
 
@@ -55,20 +98,29 @@ export default function AdminLogin() {
               <Lock className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-2xl font-bold">管理員登入</h1>
-            <p className="text-muted-foreground mt-2">請使用管理員帳號登入</p>
+            <p className="text-muted-foreground mt-2">
+              {setupMode ? '首次設定管理員帳號' : '請使用管理員帳號登入'}
+            </p>
           </div>
+
+          {setupSuccess && (
+            <div className="flex items-center gap-2 text-sm bg-primary/10 text-primary p-3 rounded-lg mb-4">
+              <CheckCircle className="w-4 h-4" />
+              管理員帳號設定成功！正在登入...
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">電郵地址</Label>
+              <Label htmlFor="username">管理員名稱</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@example.com"
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Admin"
                   className="pl-10"
                   required
                 />
@@ -104,8 +156,18 @@ export default function AdminLogin() {
               size="lg"
               disabled={loading}
             >
-              {loading ? '登入中...' : '登入'}
+              {loading ? (setupMode ? '設定中...' : '登入中...') : (setupMode ? '設定帳號' : '登入')}
             </Button>
+
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => setSetupMode(!setupMode)}
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                {setupMode ? '已有帳號？返回登入' : '首次使用？設定管理員帳號'}
+              </button>
+            </div>
           </form>
         </GlassCard>
       </motion.div>
