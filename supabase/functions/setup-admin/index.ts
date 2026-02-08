@@ -13,8 +13,29 @@ Deno.serve(async (req) => {
   try {
     const { username, password } = await req.json()
 
+    // Get setup credentials from environment variables (secure)
+    const setupUsername = Deno.env.get('ADMIN_SETUP_USERNAME')
+    const setupPassword = Deno.env.get('ADMIN_SETUP_PASSWORD')
+    
+    // Check if setup is disabled (one-time use)
+    const setupDisabled = Deno.env.get('ADMIN_SETUP_DISABLED')
+    if (setupDisabled === 'true') {
+      return new Response(
+        JSON.stringify({ error: 'Admin setup has been disabled. Contact system administrator.' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Validate that environment variables are configured
+    if (!setupUsername || !setupPassword) {
+      return new Response(
+        JSON.stringify({ error: 'Admin setup credentials not configured. Please set ADMIN_SETUP_USERNAME and ADMIN_SETUP_PASSWORD secrets.' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
     // Validate credentials (case-insensitive username)
-    if (username.toLowerCase() !== 'admin' || password !== 'ISE1234') {
+    if (username.toLowerCase() !== setupUsername.toLowerCase() || password !== setupPassword) {
       return new Response(
         JSON.stringify({ error: 'Invalid setup credentials' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -72,7 +93,10 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ success: true, message: 'Admin account configured successfully' }),
+      JSON.stringify({ 
+        success: true, 
+        message: 'Admin account configured successfully. Important: Set ADMIN_SETUP_DISABLED=true in secrets to prevent further setup calls.' 
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (error) {
