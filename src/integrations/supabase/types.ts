@@ -14,16 +14,254 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      assessment_answers: {
+        Row: {
+          answered_at: string
+          id: string
+          max_score: number
+          question_id: string
+          question_text: string
+          score: number
+          selected_option_id: string
+          selected_option_text: string
+          session_id: string
+          skill_type: string
+        }
+        Insert: {
+          answered_at?: string
+          id?: string
+          max_score?: number
+          question_id: string
+          question_text: string
+          score: number
+          selected_option_id: string
+          selected_option_text: string
+          session_id: string
+          skill_type: string
+        }
+        Update: {
+          answered_at?: string
+          id?: string
+          max_score?: number
+          question_id?: string
+          question_text?: string
+          score?: number
+          selected_option_id?: string
+          selected_option_text?: string
+          session_id?: string
+          skill_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_answers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessment_sessions: {
+        Row: {
+          ability_agility: number | null
+          ability_literacy: number | null
+          ability_resilience: number | null
+          completed_at: string | null
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          language: string | null
+          school_name: string | null
+          score_expressing: number | null
+          score_labeling: number | null
+          score_recognizing: number | null
+          score_regulating: number | null
+          score_understanding: number | null
+          started_at: string
+          student_class: string | null
+          student_name: string
+          total_score: number | null
+        }
+        Insert: {
+          ability_agility?: number | null
+          ability_literacy?: number | null
+          ability_resilience?: number | null
+          completed_at?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          language?: string | null
+          school_name?: string | null
+          score_expressing?: number | null
+          score_labeling?: number | null
+          score_recognizing?: number | null
+          score_regulating?: number | null
+          score_understanding?: number | null
+          started_at?: string
+          student_class?: string | null
+          student_name: string
+          total_score?: number | null
+        }
+        Update: {
+          ability_agility?: number | null
+          ability_literacy?: number | null
+          ability_resilience?: number | null
+          completed_at?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          language?: string | null
+          school_name?: string | null
+          score_expressing?: number | null
+          score_labeling?: number | null
+          score_recognizing?: number | null
+          score_regulating?: number | null
+          score_understanding?: number | null
+          started_at?: string
+          student_class?: string | null
+          student_name?: string
+          total_score?: number | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          school_name: string | null
+          student_class: string | null
+          student_name: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          school_name?: string | null
+          student_class?: string | null
+          student_name: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          school_name?: string | null
+          student_class?: string | null
+          student_name?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      questions_config: {
+        Row: {
+          created_at: string
+          display_order: number
+          icon: string | null
+          id: string
+          is_active: boolean
+          options: Json
+          question_id: string
+          question_text: string
+          question_text_en: string | null
+          skill_type: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_order: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          options: Json
+          question_id: string
+          question_text: string
+          question_text_en?: string | null
+          skill_type: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          options?: Json
+          question_id?: string
+          question_text?: string
+          question_text_en?: string | null
+          skill_type?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          description: string | null
+          id: string
+          setting_key: string
+          setting_type: string
+          setting_value: string | null
+          updated_at: string
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          setting_key: string
+          setting_type?: string
+          setting_value?: string | null
+          updated_at?: string
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          setting_key?: string
+          setting_type?: string
+          setting_value?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +388,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
