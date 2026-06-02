@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { GlassCard } from '@/components/GlassCard';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Search, Eye, Download, Trash2 } from 'lucide-react';
+import { Search, Eye, Download, Trash2, RefreshCw } from 'lucide-react';
 import { Tables } from '@/integrations/supabase/types';
 
 type AssessmentSession = Tables<'assessment_sessions'>;
@@ -31,11 +31,9 @@ export function AdminUsersList() {
   const [sessionAnswers, setSessionAnswers] = useState<AssessmentAnswer[]>([]);
   const [showDetails, setShowDetails] = useState(false);
 
-  useEffect(() => {
-    fetchSessions();
-  }, []);
+  const fetchSessions = useCallback(async (showLoading = false) => {
+    if (showLoading) setLoading(true);
 
-  const fetchSessions = async () => {
     try {
       const { data, error } = await supabase
         .from('assessment_sessions')
@@ -49,7 +47,26 @@ export function AdminUsersList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchSessions(true);
+
+    const refreshSessions = () => fetchSessions(false);
+    const refreshWhenVisible = () => {
+      if (!document.hidden) refreshSessions();
+    };
+
+    window.addEventListener('focus', refreshSessions);
+    document.addEventListener('visibilitychange', refreshWhenVisible);
+    const intervalId = window.setInterval(refreshSessions, 10000);
+
+    return () => {
+      window.removeEventListener('focus', refreshSessions);
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
+      window.clearInterval(intervalId);
+    };
+  }, [fetchSessions]);
 
   const fetchSessionDetails = async (session: AssessmentSession) => {
     setSelectedSession(session);
@@ -141,6 +158,10 @@ export function AdminUsersList() {
               className="pl-10 w-full sm:w-64"
             />
           </div>
+          <Button variant="outline" onClick={() => fetchSessions(true)} disabled={loading}>
+            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            刷新
+          </Button>
           <Button variant="outline" onClick={exportToCSV}>
             <Download className="w-4 h-4 mr-2" />
             匯出 CSV

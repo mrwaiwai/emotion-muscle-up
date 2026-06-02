@@ -1,15 +1,29 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { GlassCard } from '@/components/GlassCard';
 import { Gamepad2, Sparkles, Target, Brain, Heart, MessageCircle, Shield } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useState } from 'react';
 
 interface GameLandingPageProps {
-  onStart: () => void;
+  onStart: (name: string, studentClass?: string, schoolName?: string) => void;
 }
 
 export function GameLandingPage({ onStart }: GameLandingPageProps) {
   const { t } = useLanguage();
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [name, setName] = useState('');
+  const [studentClass, setStudentClass] = useState('');
+  const [schoolName, setSchoolName] = useState('');
+
+  const handleStart = () => {
+    if (showNameInput && name.trim()) {
+      onStart(name.trim(), studentClass.trim() || undefined, schoolName.trim() || undefined);
+    } else {
+      setShowNameInput(true);
+    }
+  };
 
   const gameTypes = [
     { icon: '🎯', label: t('卡牌選擇', 'Card Selection') },
@@ -126,13 +140,48 @@ export function GameLandingPage({ onStart }: GameLandingPageProps) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
+          {showNameInput && (
+            <motion.div
+              className="max-w-sm mx-auto mb-6 space-y-4"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Input
+                type="text"
+                placeholder={t('學生姓名', 'Student name')}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="h-14 rounded-xl border-2 border-primary/20 focus:border-primary"
+              />
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  type="text"
+                  placeholder={t('班級（可選）', 'Class (optional)')}
+                  value={studentClass}
+                  onChange={(e) => setStudentClass(e.target.value)}
+                  className="h-12 rounded-xl border-2 border-primary/20 focus:border-primary"
+                />
+                <Input
+                  type="text"
+                  placeholder={t('學校（可選）', 'School (optional)')}
+                  value={schoolName}
+                  onChange={(e) => setSchoolName(e.target.value)}
+                  className="h-12 rounded-xl border-2 border-primary/20 focus:border-primary"
+                  onKeyDown={(e) => e.key === 'Enter' && name.trim() && handleStart()}
+                />
+              </div>
+            </motion.div>
+          )}
+
           <Button
             size="lg"
-            onClick={onStart}
+            onClick={handleStart}
+            disabled={showNameInput && !name.trim()}
             className="h-16 px-12 text-xl rounded-2xl bg-primary-gradient shadow-lg hover:shadow-xl transition-shadow"
           >
             <Gamepad2 className="w-6 h-6 mr-2" />
-            {t('開始遊戲！', 'Start Game!')}
+            {showNameInput ? t('開始遊戲！', 'Start Game!') : t('我準備好喇！', "I'm Ready!")}
           </Button>
         </motion.div>
       </div>
