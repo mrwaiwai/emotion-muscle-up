@@ -19,6 +19,7 @@ export default function AdminLogin() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
+  const adminUsername = 'ise';
   const adminEmail = 'admin@emotion-assessment.app';
 
   const handleSetup = async () => {
@@ -49,8 +50,10 @@ export default function AdminLogin() {
     setError('');
     setLoading(true);
 
-    // Map username "Admin" to the admin email
-    const email = username === 'Admin' ? adminEmail : `${username.toLowerCase()}@emotion-assessment.app`;
+    const normalizedUsername = username.trim().toLowerCase();
+    const email = normalizedUsername === adminUsername
+      ? adminEmail
+      : `${normalizedUsername}@emotion-assessment.app`;
 
     const { error } = await signIn(email, password);
     
@@ -120,7 +123,7 @@ export default function AdminLogin() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Admin"
+                  placeholder="ise"
                   className="pl-10"
                   required
                 />
