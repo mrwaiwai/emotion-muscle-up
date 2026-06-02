@@ -26,7 +26,13 @@ export interface GameResult {
   totalPercentage: number;
 }
 
-export function useGameAssessment() {
+interface UseGameAssessmentOptions {
+  schoolId?: string;
+  schoolName?: string;
+  teacherId?: string;
+}
+
+export function useGameAssessment(options: UseGameAssessmentOptions = {}) {
   const [phase, setPhase] = useState<GamePhase>('landing');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, GameAnswer>>({});
@@ -138,7 +144,9 @@ export function useGameAssessment() {
           id: sessionId,
           student_name: studentName,
           student_class: studentClass || null,
-          school_name: schoolName || null,
+          school_name: options.schoolName || schoolName || null,
+          school_id: options.schoolId || null,
+          teacher_id: options.teacherId || null,
           language,
           started_at: startTime?.toISOString() || endTime.toISOString(),
           completed_at: endTime.toISOString(),
@@ -182,7 +190,7 @@ export function useGameAssessment() {
     } catch (error) {
       console.error('Error saving game results:', error);
     }
-  }, [answers, language, schoolName, startTime, studentClass, studentName]);
+  }, [answers, language, options.schoolId, options.schoolName, options.teacherId, schoolName, startTime, studentClass, studentName]);
 
   const completeAssessment = useCallback(async () => {
     await saveGameResultToDatabase(calculateResults());

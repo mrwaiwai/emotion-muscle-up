@@ -2,29 +2,61 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 
+export interface TeacherProfile {
+  id: string;
+  userId: string;
+  displayName: string;
+  email: string;
+  schoolId: string;
+  schoolName: string;
+}
+
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [teacherProfile, setTeacherProfile] = useState<TeacherProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
 
-    const checkAdminRole = async (userId: string) => {
+    const loadUserAccess = async (userId: string) => {
       try {
-        const { data, error } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', userId)
-          .eq('role', 'admin')
-          .maybeSingle();
+        const [{ data: roleData, error: roleError }, { data: teacherData, error: teacherError }] = await Promise.all([
+          supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', userId)
+            .eq('role', 'admin')
+            .maybeSingle(),
+          supabase
+            .from('teacher_profiles')
+            .select('id, user_id, display_name, email, school_id, schools(id, name)')
+            .eq('user_id', userId)
+            .maybeSingle(),
+        ]);
 
-        if (error) throw error;
-        if (isMounted) setIsAdmin(!!data);
+        if (roleError) throw roleError;
+        if (teacherError) throw teacherError;
+
+        if (isMounted) {
+          setIsAdmin(!!roleData);
+          setTeacherProfile(teacherData ? {
+            id: teacherData.id,
+            userId: teacherData.user_id,
+            displayName: teacherData.display_name,
+            email: teacherData.email,
+            schoolId: teacherData.school_id,
+            schoolName: teacherData.schools?.name || '',
+          } : null);
+        }
       } catch (error) {
-        console.error('Error checking admin role:', error);
-        if (isMounted) setIsAdmin(false);
+        console.error('Error loading user access:', error);
+        if (isMounted) {
+          setIsAdmin(false);
+          setTeacherProfile(null);
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -37,10 +69,11 @@ export function useAuth() {
       if (session?.user) {
         setLoading(true);
         window.setTimeout(() => {
-          void checkAdminRole(session.user.id);
+          void loadUserAccess(session.user.id);
         }, 0);
       } else {
         setIsAdmin(false);
+        setTeacherProfile(null);
         setLoading(false);
       }
     };
@@ -98,6 +131,7 @@ export function useAuth() {
     user,
     session,
     isAdmin,
+    teacherProfile,
     loading,
     signIn,
     signUp,

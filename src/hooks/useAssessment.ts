@@ -26,7 +26,13 @@ export interface AssessmentResult {
 
 export type AssessmentPhase = 'landing' | 'assessment' | 'results';
 
-export function useAssessment() {
+interface UseAssessmentOptions {
+  schoolId?: string;
+  schoolName?: string;
+  teacherId?: string;
+}
+
+export function useAssessment(options: UseAssessmentOptions = {}) {
   const [phase, setPhase] = useState<AssessmentPhase>('landing');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -155,7 +161,9 @@ export function useAssessment() {
       const sessionData = {
         student_name: studentName,
         student_class: studentClass || null,
-        school_name: schoolName || null,
+        school_name: options.schoolName || schoolName || null,
+        school_id: options.schoolId || null,
+        teacher_id: options.teacherId || null,
         language: language,
         started_at: startTimeRef.current?.toISOString() || endTime.toISOString(),
         completed_at: endTime.toISOString(),
@@ -213,7 +221,7 @@ export function useAssessment() {
     } catch (error) {
       console.error('Error saving results:', error);
     }
-  }, [answers, language, schoolName, studentClass, studentName]);
+  }, [answers, language, options.schoolId, options.schoolName, options.teacherId, schoolName, studentClass, studentName]);
 
   const completeAssessment = useCallback(async () => {
     const results = calculateResults();

@@ -248,6 +248,13 @@ export function LandingPage({ onStart }: LandingPageProps) {
 
         {/* Admin Link - Small and discreet */}
         <div className="text-center mt-4">
+          <Link
+            to="/teacher/login"
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground/70 hover:text-muted-foreground transition-colors mr-4"
+          >
+            <Users className="w-3 h-3" />
+            {t('老師登入', 'Teacher Login')}
+          </Link>
           <Link 
             to="/admin/login" 
             className="inline-flex items-center gap-1 text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
