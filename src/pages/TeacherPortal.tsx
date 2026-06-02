@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, Download, Heart, KeyRound, Loader2, LogOut, Play, RefreshCw, Search, Sparkles, Star, Users } from 'lucide-react';
+import { BookOpen, CheckCircle2, Download, Heart, KeyRound, Loader2, LogOut, Play, RefreshCw, Search, Sparkles, Star, Users } from 'lucide-react';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { GlassCard } from '@/components/GlassCard';
 import { HeroAnimation } from '@/components/HeroAnimation';
@@ -394,6 +394,44 @@ export default function TeacherPortal() {
               </GlassCard>
 
               <GlassCard variant="strong" className="p-6 max-w-xl">
+                <div className="mb-6 rounded-2xl bg-primary/10 p-5">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-start gap-4"
+                  >
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-background/80 text-2xl">
+                      👋
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-primary">老師您好，歡迎使用 Emotion MUSCLE UP</p>
+                      <h2 className="mt-1 text-2xl font-bold">這裡是學生開始檢測的入口</h2>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                        請先輸入學生姓名和年級，再按「開始測試」。系統會自動記錄學校，學生開始答題前亦會看到操作動畫，知道要讀情境、揀答案和按下一題。
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  <div className="mt-5 grid gap-3 md:grid-cols-3">
+                    {[
+                      '輸入學生姓名',
+                      '填寫年級',
+                      '交給學生開始答題',
+                    ].map((step, index) => (
+                      <motion.div
+                        key={step}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 + index * 0.08 }}
+                        className="flex items-center gap-2 rounded-xl bg-background/70 px-3 py-2 text-sm font-medium"
+                      >
+                        <CheckCircle2 className="h-4 w-4 text-primary" />
+                        {step}
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                     <Play className="w-5 h-5 text-primary" />
