@@ -438,7 +438,6 @@ export default function TeacherPortal() {
                   </div>
                   <div>
                     <h2 className="text-xl font-bold">開始 Emotion MUSCLE UP 評估</h2>
-                    <p className="text-sm text-muted-foreground">網站會自動記錄學校：{teacherProfile.schoolName}</p>
                   </div>
                 </div>
 
