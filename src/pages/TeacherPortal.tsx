@@ -29,6 +29,7 @@ export default function TeacherPortal() {
   const { user, teacherProfile, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [studentName, setStudentName] = useState('');
+  const [studentGrade, setStudentGrade] = useState('');
   const [records, setRecords] = useState<AssessmentSession[]>([]);
   const [recordsLoading, setRecordsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -93,11 +94,12 @@ export default function TeacherPortal() {
   const handleStart = (event: React.FormEvent) => {
     event.preventDefault();
     if (!studentName.trim() || !teacherProfile) return;
-    startAssessment(studentName.trim(), undefined, teacherProfile.schoolName);
+    startAssessment(studentName.trim(), studentGrade.trim() || undefined, teacherProfile.schoolName);
   };
 
   const handleReset = () => {
     setStudentName('');
+    setStudentGrade('');
     resetAssessment();
     fetchRecords(false);
   };
@@ -206,8 +208,8 @@ export default function TeacherPortal() {
                   <Play className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold">開始學生評估</h2>
-                  <p className="text-sm text-muted-foreground">學校已自動記錄為 {teacherProfile.schoolName}</p>
+                  <h2 className="text-xl font-bold">開始 Emotion MUSCLE UP 評估</h2>
+                  <p className="text-sm text-muted-foreground">網站會自動記錄學校：{teacherProfile.schoolName}</p>
                 </div>
               </div>
 
@@ -218,6 +220,12 @@ export default function TeacherPortal() {
                   placeholder="輸入學生姓名"
                   className="h-12"
                   required
+                />
+                <Input
+                  value={studentGrade}
+                  onChange={(event) => setStudentGrade(event.target.value)}
+                  placeholder="輸入年級，例如：小三"
+                  className="h-12"
                 />
                 <Button type="submit" size="lg" className="w-full">
                   開始測試
@@ -261,6 +269,7 @@ export default function TeacherPortal() {
                       <TableHeader>
                         <TableRow>
                           <TableHead>學生姓名</TableHead>
+                          <TableHead>年級</TableHead>
                           <TableHead>學校</TableHead>
                           <TableHead>總分</TableHead>
                           <TableHead>完成時間</TableHead>
@@ -271,6 +280,7 @@ export default function TeacherPortal() {
                         {filteredRecords.map((record) => (
                           <TableRow key={record.id}>
                             <TableCell className="font-medium">{record.student_name}</TableCell>
+                            <TableCell>{record.student_class || '-'}</TableCell>
                             <TableCell>{record.school_name || '-'}</TableCell>
                             <TableCell>{record.total_score !== null ? `${record.total_score}%` : '-'}</TableCell>
                             <TableCell className="text-sm text-muted-foreground">
