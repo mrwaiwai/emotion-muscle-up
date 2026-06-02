@@ -179,14 +179,13 @@ export function useAssessment() {
 
         if (error) throw error;
       } else {
-        const { data, error } = await supabase
+        const sessionId = crypto.randomUUID();
+        const { error } = await supabase
           .from('assessment_sessions')
-          .insert([sessionData])
-          .select('id')
-          .single();
+          .insert([{ id: sessionId, ...sessionData }]);
 
         if (error) throw error;
-        sessionIdRef.current = data.id;
+        sessionIdRef.current = sessionId;
       }
 
       // Save individual answers

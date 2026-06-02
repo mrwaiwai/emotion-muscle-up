@@ -131,9 +131,11 @@ export function useGameAssessment() {
         ? Math.round((endTime.getTime() - startTime.getTime()) / 1000)
         : null;
 
-      const { data: session, error: sessionError } = await supabase
+      const sessionId = crypto.randomUUID();
+      const { error: sessionError } = await supabase
         .from('assessment_sessions')
         .insert([{
+          id: sessionId,
           student_name: studentName,
           student_class: studentClass || null,
           school_name: schoolName || null,
@@ -150,9 +152,7 @@ export function useGameAssessment() {
           ability_agility: gameResult.abilityScores.agility,
           ability_literacy: gameResult.abilityScores.literacy,
           total_score: gameResult.totalPercentage,
-        }])
-        .select('id')
-        .single();
+        }]);
 
       if (sessionError) throw sessionError;
 
@@ -163,7 +163,7 @@ export function useGameAssessment() {
           .filter(Boolean);
 
         return {
-          session_id: session.id,
+          session_id: sessionId,
           question_id: question.id,
           question_text: `${question.scenarioText} ${question.questionText}`,
           selected_option_id: answer?.selections?.join(',') || answer?.matches?.map((match) => `${match.sourceId}:${match.targetId}`).join(',') || String(answer?.sliderValue ?? 'completed'),
