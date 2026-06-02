@@ -59,7 +59,7 @@ export function AdminUsersList() {
 
     window.addEventListener('focus', refreshSessions);
     document.addEventListener('visibilitychange', refreshWhenVisible);
-    const intervalId = window.setInterval(refreshSessions, 10000);
+    const intervalId = window.setInterval(refreshSessions, 2000);
 
     return () => {
       window.removeEventListener('focus', refreshSessions);

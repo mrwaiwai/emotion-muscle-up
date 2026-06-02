@@ -85,7 +85,7 @@ export function AdminDashboard() {
     refreshDashboard();
     window.addEventListener('focus', refreshDashboard);
     document.addEventListener('visibilitychange', refreshWhenVisible);
-    const intervalId = window.setInterval(refreshDashboard, 10000);
+    const intervalId = window.setInterval(refreshDashboard, 2000);
 
     return () => {
       window.removeEventListener('focus', refreshDashboard);
