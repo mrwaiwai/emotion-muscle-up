@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GlassCard } from '../GlassCard';
-import { GrowthStagesResult } from './GrowthStagesResult';
-import { MuscleMetaphorResult } from './MuscleMetaphorResult';
-import { GardenVisualResult } from './GardenVisualResult';
 import { CharacterBadgeResult } from './CharacterBadgeResult';
 import { SkillBars } from '../SkillBars';
 import { SkillsRadarChart } from '../SkillsRadarChart';
@@ -11,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { AssessmentResult } from '@/hooks/useAssessment';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Download, RotateCcw, TreeDeciduous, Dumbbell, Flower2, Award, BarChart3 } from 'lucide-react';
+import { Download, RotateCcw, Award, BarChart3 } from 'lucide-react';
 
 interface ResultsPrototypeSelectorProps {
   result: AssessmentResult;
@@ -19,31 +16,7 @@ interface ResultsPrototypeSelectorProps {
   onDownloadPdf: () => void;
 }
 
-const prototypes = [
-  {
-    id: 'growth',
-    labelZh: '成長階段',
-    labelEn: 'Growth Stages',
-    Icon: TreeDeciduous,
-    descZh: '用「萌芽→成長→茁壯」階段描述',
-    descEn: 'Uses sprouting → growing → flourishing stages',
-  },
-  {
-    id: 'muscle',
-    labelZh: '肌肉隱喻',
-    labelEn: 'Muscle Up',
-    Icon: Dumbbell,
-    descZh: '配合 MUSCLE UP 主題，強調訓練',
-    descEn: 'Matches MUSCLE UP theme with training focus',
-  },
-  {
-    id: 'garden',
-    labelZh: '花園成長',
-    labelEn: 'Garden',
-    Icon: Flower2,
-    descZh: '視覺化花園，每個技能係一棵植物',
-    descEn: 'Visual garden where each skill is a plant',
-  },
+const resultViews = [
   {
     id: 'badge',
     labelZh: '角色徽章',
@@ -53,18 +26,18 @@ const prototypes = [
     descEn: 'Unlock different emotion characters and badges',
   },
   {
-    id: 'original',
-    labelZh: '原版 (有分數)',
-    labelEn: 'Original (with scores)',
+    id: 'muscle-map',
+    labelZh: '情緒肌肉地圖',
+    labelEn: 'Emotion Muscle Map',
     Icon: BarChart3,
-    descZh: '保留雷達圖同進度條嘅分數版本',
-    descEn: 'Keeps radar chart and progress bars with scores',
+    descZh: '用雷達圖同進度條呈現五大情緒技能分數',
+    descEn: 'Shows five emotional skill scores with radar chart and progress bars',
   },
 ];
 
 export function ResultsPrototypeSelector({ result, onReset, onDownloadPdf }: ResultsPrototypeSelectorProps) {
   const { t } = useLanguage();
-  const [selectedPrototype, setSelectedPrototype] = useState('growth');
+  const [selectedResultView, setSelectedResultView] = useState('badge');
 
   return (
     <div className="min-h-screen py-8 px-4 md:px-8">
@@ -76,35 +49,35 @@ export function ResultsPrototypeSelector({ result, onReset, onDownloadPdf }: Res
           animate={{ opacity: 1, y: 0 }}
         >
           <h1 className="text-2xl md:text-3xl font-extrabold mb-2">
-            {t('🎨 結果頁面方案比較', '🎨 Results Page Prototype Comparison')}
+            {t('情緒 MUSCLE UP 結果', 'Emotion MUSCLE UP Results')}
           </h1>
           <p className="text-muted-foreground">
-            {t('請選擇你想要嘅呈現方式', 'Choose your preferred presentation style')}
+            {t('查看你嘅角色徽章同情緒肌肉地圖', 'View your character badge and emotion muscle map')}
           </p>
         </motion.div>
 
         {/* Student info banner */}
         <GlassCard className="p-4 mb-6 text-center">
           <p className="text-lg">
-            {t('示範學生：', 'Demo Student: ')}
+            {t('學生名稱：', 'Student Name: ')}
             <span className="font-bold gradient-text">{result.studentName}</span>
           </p>
         </GlassCard>
 
-        {/* Prototype Tabs */}
-        <Tabs value={selectedPrototype} onValueChange={setSelectedPrototype} className="space-y-6">
+        {/* Result Tabs */}
+        <Tabs value={selectedResultView} onValueChange={setSelectedResultView} className="space-y-6">
           <TabsList className="w-full h-auto flex-wrap gap-2 bg-muted/50 p-2 rounded-xl">
-            {prototypes.map((proto) => {
-              const Icon = proto.Icon;
+            {resultViews.map((view) => {
+              const Icon = view.Icon;
               return (
                 <TabsTrigger
-                  key={proto.id}
-                  value={proto.id}
+                  key={view.id}
+                  value={view.id}
                   className="flex-1 min-w-[120px] flex flex-col items-center gap-1 py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg"
                 >
                   <Icon className="w-5 h-5" />
                   <span className="text-xs font-medium">
-                    {t(proto.labelZh, proto.labelEn)}
+                    {t(view.labelZh, view.labelEn)}
                   </span>
                 </TabsTrigger>
               );
@@ -113,11 +86,11 @@ export function ResultsPrototypeSelector({ result, onReset, onDownloadPdf }: Res
 
           {/* Description */}
           <div className="text-center text-sm text-muted-foreground">
-            {prototypes.find(p => p.id === selectedPrototype) && (
+            {resultViews.find((view) => view.id === selectedResultView) && (
               <p>
                 {t(
-                  prototypes.find(p => p.id === selectedPrototype)!.descZh,
-                  prototypes.find(p => p.id === selectedPrototype)!.descEn
+                  resultViews.find((view) => view.id === selectedResultView)!.descZh,
+                  resultViews.find((view) => view.id === selectedResultView)!.descEn
                 )}
               </p>
             )}
@@ -125,23 +98,11 @@ export function ResultsPrototypeSelector({ result, onReset, onDownloadPdf }: Res
 
           {/* Content */}
           <GlassCard className="p-6">
-            <TabsContent value="growth" className="mt-0">
-              <GrowthStagesResult skillScores={result.skillScores} />
-            </TabsContent>
-
-            <TabsContent value="muscle" className="mt-0">
-              <MuscleMetaphorResult skillScores={result.skillScores} />
-            </TabsContent>
-
-            <TabsContent value="garden" className="mt-0">
-              <GardenVisualResult skillScores={result.skillScores} />
-            </TabsContent>
-
             <TabsContent value="badge" className="mt-0">
               <CharacterBadgeResult skillScores={result.skillScores} />
             </TabsContent>
 
-            <TabsContent value="original" className="mt-0 space-y-6">
+            <TabsContent value="muscle-map" className="mt-0 space-y-6">
               <SkillsRadarChart skillScores={result.skillScores} />
               <SkillBars skillScores={result.skillScores} />
             </TabsContent>
@@ -175,20 +136,6 @@ export function ResultsPrototypeSelector({ result, onReset, onDownloadPdf }: Res
           </Button>
         </motion.div>
 
-        {/* Selection prompt */}
-        <motion.div
-          className="mt-8 p-4 rounded-xl bg-primary/10 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <p className="text-sm">
-            {t(
-              '💡 你鍾意邊個方案？喺 chat 話我知你嘅選擇！',
-              '💡 Which style do you prefer? Let me know your choice in the chat!'
-            )}
-          </p>
-        </motion.div>
       </div>
     </div>
   );
