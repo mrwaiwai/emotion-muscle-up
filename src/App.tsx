@@ -2,10 +2,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
+import type { ReactNode } from "react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { LanguageToggle } from "@/components/LanguageToggle";
-import Index from "./pages/Index";
+import { useAuth } from "@/hooks/useAuth";
+import Access from "./pages/Access";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
@@ -16,6 +18,14 @@ import TeacherPortal from "./pages/TeacherPortal";
 
 const queryClient = new QueryClient();
 
+function AuthenticatedRoute({ children }: { children: ReactNode }) {
+  const { user, loading } = useAuth();
+
+  if (loading) return null;
+  if (!user) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
@@ -25,9 +35,9 @@ const App = () => (
         <LanguageToggle />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/results-demo" element={<ResultsDemo />} />
-            <Route path="/games-demo" element={<GamesDemo />} />
+            <Route path="/" element={<Access />} />
+            <Route path="/results-demo" element={<AuthenticatedRoute><ResultsDemo /></AuthenticatedRoute>} />
+            <Route path="/games-demo" element={<AuthenticatedRoute><GamesDemo /></AuthenticatedRoute>} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/teacher" element={<TeacherPortal />} />
