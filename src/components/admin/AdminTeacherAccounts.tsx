@@ -27,16 +27,18 @@ interface TeacherRow {
   schools?: { name: string } | null;
 }
 
+const DEFAULT_TEACHER_PASSWORD = '123456';
+
 const formatTeacherInfo = (teacher: TeacherRow) => [
   `老師名稱：${teacher.display_name}`,
   `帳號電郵：${teacher.email}`,
   `學校名稱：${teacher.schools?.name || '-'}`,
+  `初始密碼：${DEFAULT_TEACHER_PASSWORD}`,
 ].join('\n');
 
 export function AdminTeacherAccounts() {
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [schoolName, setSchoolName] = useState('');
   const [teachers, setTeachers] = useState<TeacherRow[]>([]);
   const [loading, setLoading] = useState(false);
@@ -131,7 +133,7 @@ export function AdminTeacherAccounts() {
         body: {
           displayName,
           email,
-          password,
+          password: DEFAULT_TEACHER_PASSWORD,
           schoolName,
         },
       });
@@ -144,7 +146,6 @@ export function AdminTeacherAccounts() {
       });
       setDisplayName('');
       setEmail('');
-      setPassword('');
       setSchoolName('');
       fetchTeachers();
     } catch (error: any) {
@@ -162,7 +163,9 @@ export function AdminTeacherAccounts() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">老師帳號</h2>
-        <p className="text-sm text-muted-foreground">建立前台老師登入帳號，並綁定所屬學校</p>
+        <p className="text-sm text-muted-foreground">
+          建立前台老師登入帳號，初始密碼固定為 {DEFAULT_TEACHER_PASSWORD}，老師登入後可自行修改密碼
+        </p>
       </div>
 
       <GlassCard className="p-6">
@@ -179,9 +182,9 @@ export function AdminTeacherAccounts() {
             <Label htmlFor="teacher-email">帳號電郵</Label>
             <Input id="teacher-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="teacher-password">密碼</Label>
-            <Input id="teacher-password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required />
+          <div className="rounded-xl border bg-muted/30 p-4">
+            <p className="text-sm text-muted-foreground">初始密碼</p>
+            <p className="mt-1 font-mono text-lg font-semibold">{DEFAULT_TEACHER_PASSWORD}</p>
           </div>
           <div className="md:col-span-2">
             <Button type="submit" disabled={loading}>
