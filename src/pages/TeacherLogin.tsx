@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { GlassCard } from '@/components/GlassCard';
 import { useAuth } from '@/hooks/useAuth';
 import { AlertCircle, ArrowLeft, GraduationCap, Lock, Mail } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function TeacherLogin() {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ export default function TeacherLogin() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -22,7 +24,7 @@ export default function TeacherLogin() {
 
     const { error: signInError } = await signIn(email.trim().toLowerCase(), password);
     if (signInError) {
-      setError(signInError.message === 'Invalid login credentials' ? '帳號或密碼錯誤' : signInError.message);
+      setError(signInError.message === 'Invalid login credentials' ? t('帳號或密碼不正確', 'Incorrect account or password') : signInError.message);
       setLoading(false);
       return;
     }
@@ -35,7 +37,7 @@ export default function TeacherLogin() {
       <div className="w-full max-w-md">
         <Button variant="ghost" onClick={() => navigate('/')} className="mb-6">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          返回主頁
+          {t('返回主頁', 'Back to Home')}
         </Button>
 
         <GlassCard className="p-8">
@@ -43,13 +45,15 @@ export default function TeacherLogin() {
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <GraduationCap className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold">老師登入</h1>
-            <p className="text-muted-foreground mt-2">使用學校獲發帳號開始學生評估</p>
+            <h1 className="text-2xl font-bold">{t('老師登入', 'Teacher Login')}</h1>
+            <p className="text-muted-foreground mt-2">
+              {t('請使用學校獲發的帳號，進入老師平台開始學生評估。', 'Use your school-issued account to enter the teacher portal and start student assessments.')}
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="teacher-email">帳號電郵</Label>
+              <Label htmlFor="teacher-email">{t('帳號電郵', 'Account Email')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -65,7 +69,7 @@ export default function TeacherLogin() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="teacher-password">密碼</Label>
+              <Label htmlFor="teacher-password">{t('密碼', 'Password')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -87,7 +91,7 @@ export default function TeacherLogin() {
             )}
 
             <Button type="submit" className="w-full" size="lg" disabled={loading}>
-              {loading ? '登入中...' : '登入'}
+              {loading ? t('登入中...', 'Signing in...') : t('登入', 'Sign In')}
             </Button>
           </form>
         </GlassCard>
