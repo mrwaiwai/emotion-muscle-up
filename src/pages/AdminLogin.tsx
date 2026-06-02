@@ -9,6 +9,8 @@ import { Lock, User, AlertCircle, ArrowLeft, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 
+const ADMIN_USERNAME = 'ise';
+
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +21,7 @@ export default function AdminLogin() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
-  const adminUsername = 'ise';
+  const adminUsername = ADMIN_USERNAME;
   const adminEmail = 'admin@emotion-assessment.app';
 
   const handleSetup = async () => {
