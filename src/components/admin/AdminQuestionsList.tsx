@@ -44,7 +44,6 @@ export function AdminQuestionsList() {
       if (error) throw error;
 
       if (data && data.length > 0) {
-        // Use database questions
         const dbQuestions: EditableQuestion[] = data.map((q) => ({
           dbId: q.id,
           id: q.question_id,
@@ -56,7 +55,17 @@ export function AdminQuestionsList() {
           videoUrl: q.video_url || undefined,
           options: q.options as any,
         }));
-        setQuestions(dbQuestions);
+
+        const dbQuestionsById = new Map(dbQuestions.map((q) => [q.id, q]));
+        const defaultQuestionsWithDbOverrides = defaultQuestions.map((q) => ({
+          ...q,
+          ...dbQuestionsById.get(q.id),
+        }));
+        const customDbQuestions = dbQuestions.filter(
+          (q) => !defaultQuestions.some((defaultQuestion) => defaultQuestion.id === q.id)
+        );
+
+        setQuestions([...defaultQuestionsWithDbOverrides, ...customDbQuestions]);
       } else {
         // Initialize from default questions
         setQuestions(defaultQuestions);

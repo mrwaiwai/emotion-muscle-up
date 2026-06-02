@@ -9,52 +9,66 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
+    const checkAdminRole = async (userId: string) => {
+      try {
+        const { data, error } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', userId)
+          .eq('role', 'admin')
+          .maybeSingle();
+
+        if (error) throw error;
+        if (isMounted) setIsAdmin(!!data);
+      } catch (error) {
+        console.error('Error checking admin role:', error);
+        if (isMounted) setIsAdmin(false);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    const applySession = (session: Session | null) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+
+      if (session?.user) {
+        setLoading(true);
+        window.setTimeout(() => {
+          void checkAdminRole(session.user.id);
+        }, 0);
+      } else {
+        setIsAdmin(false);
+        setLoading(false);
+      }
+    };
+
     // Set up auth state listener BEFORE checking session
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          // Check if user is admin
-          const { data } = await supabase
-            .from('user_roles')
-            .select('role')
-            .eq('user_id', session.user.id)
-            .eq('role', 'admin')
-            .maybeSingle();
-          
-          setIsAdmin(!!data);
-        } else {
-          setIsAdmin(false);
-        }
-        
-        setLoading(false);
+      (_event, session) => {
+        applySession(session);
       }
     );
 
     // Check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', session.user.id)
-          .eq('role', 'admin')
-          .maybeSingle()
-          .then(({ data }) => {
-            setIsAdmin(!!data);
-            setLoading(false);
-          });
-      } else {
+      applySession(session);
+    }).catch((error) => {
+      console.error('Error getting auth session:', error);
+      if (isMounted) {
+        setSession(null);
+        setUser(null);
+        setIsAdmin(false);
         setLoading(false);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {

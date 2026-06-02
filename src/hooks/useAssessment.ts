@@ -50,29 +50,6 @@ export function useAssessment() {
     setAnswers({});
     startTimeRef.current = new Date();
 
-    // Create session in database
-    try {
-      const { data, error } = await supabase
-        .from('assessment_sessions')
-        .insert([{
-          student_name: name,
-          student_class: studentClassInput || null,
-          school_name: schoolInput || null,
-          language: language,
-          started_at: new Date().toISOString(),
-        }])
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating session:', error);
-      } else if (data) {
-        sessionIdRef.current = data.id;
-      }
-    } catch (err) {
-      console.error('Error creating session:', err);
-    }
-
     setPhase('assessment');
   }, [language]);
 
@@ -163,8 +140,6 @@ export function useAssessment() {
   }, [answers, studentName]);
 
   const saveAnswersToDatabase = useCallback(async (results: AssessmentResult) => {
-    if (!sessionIdRef.current) return;
-
     try {
       // Calculate duration
       const endTime = new Date();
@@ -177,23 +152,42 @@ export function useAssessment() {
         results.skillScores.reduce((sum, s) => sum + s.percentage, 0) / results.skillScores.length
       );
 
-      // Update session with scores
-      await supabase
-        .from('assessment_sessions')
-        .update({
-          completed_at: endTime.toISOString(),
-          duration_seconds: durationSeconds,
-          score_recognizing: results.skillScores.find(s => s.skill === 'recognizing')?.percentage,
-          score_understanding: results.skillScores.find(s => s.skill === 'understanding')?.percentage,
-          score_labeling: results.skillScores.find(s => s.skill === 'labeling')?.percentage,
-          score_expressing: results.skillScores.find(s => s.skill === 'expressing')?.percentage,
-          score_regulating: results.skillScores.find(s => s.skill === 'regulating')?.percentage,
-          ability_resilience: results.abilityLevels.find(a => a.nameEn === 'Emotional Resilience')?.percentage,
-          ability_agility: results.abilityLevels.find(a => a.nameEn === 'Emotional Agility')?.percentage,
-          ability_literacy: results.abilityLevels.find(a => a.nameEn === 'Emotional Literacy')?.percentage,
-          total_score: totalScore,
-        })
-        .eq('id', sessionIdRef.current);
+      const sessionData = {
+        student_name: studentName,
+        student_class: studentClass || null,
+        school_name: schoolName || null,
+        language: language,
+        started_at: startTimeRef.current?.toISOString() || endTime.toISOString(),
+        completed_at: endTime.toISOString(),
+        duration_seconds: durationSeconds,
+        score_recognizing: results.skillScores.find(s => s.skill === 'recognizing')?.percentage,
+        score_understanding: results.skillScores.find(s => s.skill === 'understanding')?.percentage,
+        score_labeling: results.skillScores.find(s => s.skill === 'labeling')?.percentage,
+        score_expressing: results.skillScores.find(s => s.skill === 'expressing')?.percentage,
+        score_regulating: results.skillScores.find(s => s.skill === 'regulating')?.percentage,
+        ability_resilience: results.abilityLevels.find(a => a.nameEn === 'Emotional Resilience')?.percentage,
+        ability_agility: results.abilityLevels.find(a => a.nameEn === 'Emotional Agility')?.percentage,
+        ability_literacy: results.abilityLevels.find(a => a.nameEn === 'Emotional Literacy')?.percentage,
+        total_score: totalScore,
+      };
+
+      if (sessionIdRef.current) {
+        const { error } = await supabase
+          .from('assessment_sessions')
+          .update(sessionData)
+          .eq('id', sessionIdRef.current);
+
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase
+          .from('assessment_sessions')
+          .insert([sessionData])
+          .select('id')
+          .single();
+
+        if (error) throw error;
+        sessionIdRef.current = data.id;
+      }
 
       // Save individual answers
       const answerRecords = questions.map(q => {
@@ -212,14 +206,15 @@ export function useAssessment() {
         };
       });
 
-      await supabase
+      const { error: answersError } = await supabase
         .from('assessment_answers')
         .insert(answerRecords);
 
+      if (answersError) throw answersError;
     } catch (error) {
       console.error('Error saving results:', error);
     }
-  }, [answers]);
+  }, [answers, language, schoolName, studentClass, studentName]);
 
   const completeAssessment = useCallback(async () => {
     const results = calculateResults();
