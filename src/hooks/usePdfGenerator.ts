@@ -10,20 +10,17 @@ export function usePdfGenerator() {
   const { language } = useLanguage();
 
   const generatePdf = useCallback(async (result: AssessmentResult) => {
-    if (!resultRef.current) return;
-
     const isEnglish = language === 'en';
     const element = resultRef.current;
-    
-    // Create canvas from the result section for charts (captures Chinese correctly)
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-      logging: false,
-    });
 
-    const imgData = canvas.toDataURL('image/png');
+    if (element) {
+      await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
+    }
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',

@@ -8,13 +8,17 @@ import { AdminUsersList } from '@/components/admin/AdminUsersList';
 import { AdminQuestionsList } from '@/components/admin/AdminQuestionsList';
 import { AdminSettings } from '@/components/admin/AdminSettings';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
+import { AdminSchoolUsage } from '@/components/admin/AdminSchoolUsage';
+import { AdminTeacherAccounts } from '@/components/admin/AdminTeacherAccounts';
 import { 
   LayoutDashboard, 
   Users, 
   FileQuestion, 
   Settings, 
   LogOut,
-  Loader2
+  Loader2,
+  Building2,
+  GraduationCap
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -81,7 +85,7 @@ export default function Admin() {
           animate={{ opacity: 1, y: 0 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+            <TabsList className="grid grid-cols-3 sm:grid-cols-6 w-full max-w-5xl">
               <TabsTrigger value="dashboard" className="flex items-center gap-2">
                 <LayoutDashboard className="w-4 h-4" />
                 <span className="hidden sm:inline">總覽</span>
@@ -89,6 +93,14 @@ export default function Admin() {
               <TabsTrigger value="users" className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
                 <span className="hidden sm:inline">用戶數據</span>
+              </TabsTrigger>
+              <TabsTrigger value="schools" className="flex items-center gap-2">
+                <Building2 className="w-4 h-4" />
+                <span className="hidden sm:inline">學校</span>
+              </TabsTrigger>
+              <TabsTrigger value="teachers" className="flex items-center gap-2">
+                <GraduationCap className="w-4 h-4" />
+                <span className="hidden sm:inline">老師帳號</span>
               </TabsTrigger>
               <TabsTrigger value="questions" className="flex items-center gap-2">
                 <FileQuestion className="w-4 h-4" />
@@ -106,6 +118,14 @@ export default function Admin() {
 
             <TabsContent value="users">
               <AdminUsersList />
+            </TabsContent>
+
+            <TabsContent value="schools">
+              <AdminSchoolUsage />
+            </TabsContent>
+
+            <TabsContent value="teachers">
+              <AdminTeacherAccounts />
             </TabsContent>
 
             <TabsContent value="questions">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { GlassCard } from '@/components/GlassCard';
 import { Users, FileCheck, TrendingUp, Clock } from 'lucide-react';
@@ -20,12 +20,7 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [recentSessions, setRecentSessions] = useState<any[]>([]);
 
-  useEffect(() => {
-    fetchStats();
-    fetchRecentSessions();
-  }, []);
-
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const { data: sessions, error } = await supabase
         .from('assessment_sessions')
@@ -61,9 +56,9 @@ export function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchRecentSessions = async () => {
+  const fetchRecentSessions = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('assessment_sessions')
@@ -76,7 +71,28 @@ export function AdminDashboard() {
     } catch (error) {
       console.error('Error fetching recent sessions:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const refreshDashboard = () => {
+      fetchStats();
+      fetchRecentSessions();
+    };
+    const refreshWhenVisible = () => {
+      if (!document.hidden) refreshDashboard();
+    };
+
+    refreshDashboard();
+    window.addEventListener('focus', refreshDashboard);
+    document.addEventListener('visibilitychange', refreshWhenVisible);
+    const intervalId = window.setInterval(refreshDashboard, 2000);
+
+    return () => {
+      window.removeEventListener('focus', refreshDashboard);
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
+      window.clearInterval(intervalId);
+    };
+  }, [fetchRecentSessions, fetchStats]);
 
   const statCards = [
     {

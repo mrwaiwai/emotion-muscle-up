@@ -71,6 +71,7 @@ export type Database = {
           duration_seconds: number | null
           id: string
           language: string | null
+          school_id: string | null
           school_name: string | null
           score_expressing: number | null
           score_labeling: number | null
@@ -80,6 +81,7 @@ export type Database = {
           started_at: string
           student_class: string | null
           student_name: string
+          teacher_id: string | null
           total_score: number | null
         }
         Insert: {
@@ -91,6 +93,7 @@ export type Database = {
           duration_seconds?: number | null
           id?: string
           language?: string | null
+          school_id?: string | null
           school_name?: string | null
           score_expressing?: number | null
           score_labeling?: number | null
@@ -100,6 +103,7 @@ export type Database = {
           started_at?: string
           student_class?: string | null
           student_name: string
+          teacher_id?: string | null
           total_score?: number | null
         }
         Update: {
@@ -111,6 +115,7 @@ export type Database = {
           duration_seconds?: number | null
           id?: string
           language?: string | null
+          school_id?: string | null
           school_name?: string | null
           score_expressing?: number | null
           score_labeling?: number | null
@@ -120,9 +125,18 @@ export type Database = {
           started_at?: string
           student_class?: string | null
           student_name?: string
+          teacher_id?: string | null
           total_score?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "assessment_sessions_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -226,6 +240,62 @@ export type Database = {
         }
         Relationships: []
       }
+      schools: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      teacher_profiles: {
+        Row: {
+          created_at: string
+          display_name: string
+          email: string
+          id: string
+          school_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          email: string
+          id?: string
+          school_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          email?: string
+          id?: string
+          school_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_profiles_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -256,6 +326,13 @@ export type Database = {
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_teacher_for_school: {
+        Args: {
+          _school_id: string
           _user_id: string
         }
         Returns: boolean
