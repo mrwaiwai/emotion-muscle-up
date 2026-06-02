@@ -25,11 +25,13 @@ import { usePdfGenerator } from '@/hooks/usePdfGenerator';
 import { supabase } from '@/integrations/supabase/client';
 import { Tables } from '@/integrations/supabase/types';
 import { downloadSessionReportPdf } from '@/lib/sessionReportPdf';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 type AssessmentSession = Tables<'assessment_sessions'>;
 
 export default function TeacherPortal() {
   const { user, teacherProfile, loading, signOut } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [studentName, setStudentName] = useState('');
   const [studentGrade, setStudentGrade] = useState('');
@@ -184,18 +186,18 @@ export default function TeacherPortal() {
   if (!user || !teacherProfile) return null;
 
   const overviewStages = [
-    { name: 'Show up', desc: '勇敢面對', icon: '💪' },
-    { name: 'Step out', desc: '踏出一步', icon: '🚀' },
-    { name: 'Value', desc: '跟住內心', icon: '❤️' },
-    { name: 'Move on', desc: '繼續向前', icon: '✨' },
+    { name: 'Show up', desc: t('勇敢面對', 'Be present'), icon: '💪' },
+    { name: 'Step out', desc: t('踏出一步', 'Take a step'), icon: '🚀' },
+    { name: 'Value', desc: t('聆聽內心', 'Follow values'), icon: '❤️' },
+    { name: 'Move on', desc: t('繼續前進', 'Move forward'), icon: '✨' },
   ];
 
   const overviewSkills = [
-    { name: '辨別 Recognizing', color: 'bg-skill-recognizing' },
-    { name: '理解 Understanding', color: 'bg-skill-understanding' },
-    { name: '標記 Labeling', color: 'bg-skill-labeling' },
-    { name: '表達 Expressing', color: 'bg-skill-expressing' },
-    { name: '調節 Regulating', color: 'bg-skill-regulating' },
+    { name: t('辨別 Recognizing', 'Recognizing'), color: 'bg-skill-recognizing' },
+    { name: t('理解 Understanding', 'Understanding'), color: 'bg-skill-understanding' },
+    { name: t('標記 Labeling', 'Labeling'), color: 'bg-skill-labeling' },
+    { name: t('表達 Expressing', 'Expressing'), color: 'bg-skill-expressing' },
+    { name: t('調節 Regulating', 'Regulating'), color: 'bg-skill-regulating' },
   ];
 
   if (phase === 'assessment' && currentQuestion && showWelcomeGuide) {
@@ -217,14 +219,16 @@ export default function TeacherPortal() {
               >
                 💪
               </motion.div>
-              <h1 className="text-3xl font-bold">準備開始 Emotion MUSCLE UP</h1>
-              <p className="mt-2 text-muted-foreground">每一題慢慢睇情境，揀一個最似自己平時反應嘅答案。</p>
+              <h1 className="text-3xl font-bold">{t('準備開始 Emotion MUSCLE UP', 'Get Ready for Emotion MUSCLE UP')}</h1>
+              <p className="mt-2 text-muted-foreground">
+                {t('請仔細閱讀每一題的情境，然後選擇最接近自己平日反應的答案。', 'Read each situation carefully, then choose the answer that best matches how you usually respond.')}
+              </p>
 
               <div className="mt-8 grid gap-3 md:grid-cols-3">
                 {[
-                  { icon: '👀', title: '睇清楚', text: '先讀情境同問題' },
-                  { icon: '☝️', title: '揀答案', text: '點選最合適選項' },
-                  { icon: '➡️', title: '去下一題', text: '完成後按下一題' },
+                  { icon: '👀', title: t('仔細閱讀', 'Read Carefully'), text: t('先閱讀情境和問題', 'Read the situation and question first') },
+                  { icon: '☝️', title: t('選擇答案', 'Choose an Answer'), text: t('點選最合適的選項', 'Tap the most suitable option') },
+                  { icon: '➡️', title: t('前往下一題', 'Move to the Next Question'), text: t('完成後按下一題', 'Press Next when finished') },
                 ].map((item, index) => (
                   <motion.div
                     key={item.title}
@@ -241,7 +245,7 @@ export default function TeacherPortal() {
               </div>
 
               <Button className="mt-8 h-14 px-10 text-lg" onClick={() => setShowWelcomeGuide(false)}>
-                我明白，開始答題
+                {t('我明白，開始答題', 'I Understand. Start')}
               </Button>
             </GlassCard>
           </motion.div>
@@ -289,14 +293,14 @@ export default function TeacherPortal() {
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-xl font-bold">老師工作台</h1>
+            <h1 className="text-xl font-bold">{t('老師工作台', 'Teacher Portal')}</h1>
             <p className="text-sm text-muted-foreground">
               {teacherProfile.displayName} · {teacherProfile.schoolName}
             </p>
           </div>
           <Button variant="outline" size="sm" onClick={handleSignOut}>
             <LogOut className="w-4 h-4 mr-2" />
-            登出
+            {t('登出', 'Sign Out')}
           </Button>
         </div>
       </header>
@@ -304,9 +308,9 @@ export default function TeacherPortal() {
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="start" className="space-y-6">
           <TabsList className="grid grid-cols-3 w-full max-w-xl">
-            <TabsTrigger value="start">開始測試</TabsTrigger>
-            <TabsTrigger value="records">學生記錄</TabsTrigger>
-            <TabsTrigger value="account">帳戶設定</TabsTrigger>
+            <TabsTrigger value="start">{t('開始測試', 'Start Assessment')}</TabsTrigger>
+            <TabsTrigger value="records">{t('學生記錄', 'Student Records')}</TabsTrigger>
+            <TabsTrigger value="account">{t('帳戶設定', 'Account Settings')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="start">
@@ -315,7 +319,9 @@ export default function TeacherPortal() {
                 <h2 className="text-3xl font-extrabold md:text-5xl">
                   <span className="gradient-text">情緒 MUSCLE UP</span>
                 </h2>
-                <p className="mt-2 text-lg font-medium text-muted-foreground">兒童情緒能力測驗 💪🧠❤️</p>
+                <p className="mt-2 text-lg font-medium text-muted-foreground">
+                  {t('兒童情緒能力評估 💪🧠❤️', 'Children’s Emotional Skills Assessment 💪🧠❤️')}
+                </p>
               </section>
 
               <HeroAnimation />
@@ -327,9 +333,12 @@ export default function TeacherPortal() {
                       <Heart className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">呢個測驗係咩嚟㗎？</h3>
+                      <h3 className="text-xl font-bold mb-2">{t('這項評估是甚麼？', 'What is this assessment?')}</h3>
                       <p className="text-muted-foreground leading-relaxed">
-                        我哋會一齊探索你嘅情緒肌肉！睇吓你喺認識同處理情緒方面做得點。
+                        {t(
+                          '這項工具會以友善方式了解學生在辨識、理解、表達和調節情緒方面的能力。',
+                          'This tool gently explores how students recognize, understand, express, and regulate emotions.',
+                        )}
                       </p>
                     </div>
                   </div>
@@ -341,12 +350,14 @@ export default function TeacherPortal() {
                       <Users className="w-6 h-6 text-accent-foreground" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">邊個可以玩？</h3>
-                      <p className="text-2xl font-bold text-primary mb-1">小學生！🎒</p>
-                      <p className="text-muted-foreground">小一至小六都啱玩 ✨</p>
+                      <h3 className="text-xl font-bold mb-2">{t('適合哪些學生？', 'Who is it for?')}</h3>
+                      <p className="text-2xl font-bold text-primary mb-1">{t('小學生 🎒', 'Primary Students 🎒')}</p>
+                      <p className="text-muted-foreground">{t('適合小一至小六學生使用 ✨', 'Suitable for Primary 1 to Primary 6 students ✨')}</p>
                       <div className="mt-3 flex items-center gap-2 rounded-xl bg-muted/50 p-3">
                         <BookOpen className="w-5 h-5 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">呢個只係參考，唔係心理測試</span>
+                        <span className="text-sm text-muted-foreground">
+                          {t('評估結果只作教育參考，並非心理診斷。', 'Results are for educational reference only and are not a psychological diagnosis.')}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -356,7 +367,7 @@ export default function TeacherPortal() {
               <GlassCard className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <Sparkles className="w-6 h-6 text-primary" />
-                  <h3 className="text-xl font-bold">我哋會睇呢 5 種情緒技能</h3>
+                  <h3 className="text-xl font-bold">{t('評估會涵蓋五項情緒技能', 'The assessment covers five emotional skills')}</h3>
                 </div>
                 <div className="flex flex-wrap gap-2 mb-6">
                   {overviewSkills.map((skill, index) => (
@@ -374,7 +385,7 @@ export default function TeacherPortal() {
 
                 <h3 className="font-bold mb-3 flex items-center gap-2">
                   <Star className="w-5 h-5 text-emotion-labeling" />
-                  四個成長階段
+                  {t('四個成長階段', 'Four Growth Stages')}
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {overviewStages.map((stage, index) => (
@@ -404,19 +415,22 @@ export default function TeacherPortal() {
                       👋
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-primary">老師您好，歡迎使用 Emotion MUSCLE UP</p>
-                      <h2 className="mt-1 text-2xl font-bold">這裡是學生開始檢測的入口</h2>
+                      <p className="text-sm font-semibold text-primary">{t('老師您好，歡迎使用 Emotion MUSCLE UP', 'Welcome to Emotion MUSCLE UP')}</p>
+                      <h2 className="mt-1 text-2xl font-bold">{t('這裡是學生開始評估的入口', 'This is where students begin the assessment')}</h2>
                       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                        請先輸入學生姓名和年級，再按「開始測試」。系統會自動記錄學校，學生開始答題前亦會看到操作動畫，知道要讀情境、揀答案和按下一題。
+                        {t(
+                          '請先輸入學生姓名和年級，再按「開始測試」。學生開始答題前會看到操作動畫，了解如何閱讀情境、選擇答案和前往下一題。',
+                          'Enter the student name and grade, then select “Start Assessment”. Before answering, students will see a short guide on reading each situation, choosing an answer, and moving to the next question.',
+                        )}
                       </p>
                     </div>
                   </motion.div>
 
                   <div className="mt-5 grid gap-3 md:grid-cols-3">
                     {[
-                      '輸入學生姓名',
-                      '填寫年級',
-                      '交給學生開始答題',
+                      t('輸入學生姓名', 'Enter student name'),
+                      t('填寫年級', 'Enter grade'),
+                      t('交給學生開始答題', 'Let the student begin'),
                     ].map((step, index) => (
                       <motion.div
                         key={step}
@@ -437,7 +451,7 @@ export default function TeacherPortal() {
                     <Play className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold">開始 Emotion MUSCLE UP 評估</h2>
+                    <h2 className="text-xl font-bold">{t('開始 Emotion MUSCLE UP 評估', 'Start Emotion MUSCLE UP Assessment')}</h2>
                   </div>
                 </div>
 
@@ -445,18 +459,18 @@ export default function TeacherPortal() {
                   <Input
                     value={studentName}
                     onChange={(event) => setStudentName(event.target.value)}
-                    placeholder="輸入學生姓名"
+                    placeholder={t('輸入學生姓名', 'Enter student name')}
                     className="h-12"
                     required
                   />
                   <Input
                     value={studentGrade}
                     onChange={(event) => setStudentGrade(event.target.value)}
-                    placeholder="輸入年級，例如：小三"
+                    placeholder={t('輸入年級，例如：小三', 'Enter grade, e.g. Primary 3')}
                     className="h-12"
                   />
                   <Button type="submit" size="lg" className="w-full">
-                    開始測試
+                    {t('開始測試', 'Start Assessment')}
                   </Button>
                 </form>
               </GlassCard>

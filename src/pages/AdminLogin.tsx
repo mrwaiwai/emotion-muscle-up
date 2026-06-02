@@ -8,6 +8,7 @@ import { GlassCard } from '@/components/GlassCard';
 import { Lock, User, AlertCircle, ArrowLeft, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const ADMIN_USERNAME = 'ise';
 
@@ -19,6 +20,7 @@ export default function AdminLogin() {
   const [setupMode, setSetupMode] = useState(false);
   const [setupSuccess, setSetupSuccess] = useState(false);
   const { signIn } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const adminUsername = ADMIN_USERNAME;
@@ -42,7 +44,7 @@ export default function AdminLogin() {
       // Auto-login after setup
       setTimeout(() => handleLogin(), 1000);
     } catch (err: any) {
-      setError(err.message || '設定失敗');
+      setError(err.message || t('設定失敗', 'Setup failed'));
     } finally {
       setLoading(false);
     }
@@ -61,7 +63,7 @@ export default function AdminLogin() {
     
     if (error) {
       if (error.message === 'Invalid login credentials') {
-        setError('名稱或密碼錯誤');
+        setError(t('名稱或密碼不正確', 'Incorrect name or password'));
       } else {
         setError(error.message);
       }
@@ -94,7 +96,7 @@ export default function AdminLogin() {
           className="mb-6"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          返回主頁
+          {t('返回主頁', 'Back to Home')}
         </Button>
 
         <GlassCard className="p-8">
@@ -102,22 +104,24 @@ export default function AdminLogin() {
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <Lock className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold">管理員登入</h1>
+            <h1 className="text-2xl font-bold">{t('管理員登入', 'Administrator Login')}</h1>
             <p className="text-muted-foreground mt-2">
-              {setupMode ? '首次設定管理員帳號' : '請使用管理員帳號登入'}
+              {setupMode
+                ? t('首次設定管理員帳號', 'Set up the administrator account')
+                : t('請使用管理員帳號登入', 'Sign in with an administrator account')}
             </p>
           </div>
 
           {setupSuccess && (
             <div className="flex items-center gap-2 text-sm bg-primary/10 text-primary p-3 rounded-lg mb-4">
               <CheckCircle className="w-4 h-4" />
-              管理員帳號設定成功！正在登入...
+              {t('管理員帳號設定成功，正在登入...', 'Administrator account set up successfully. Signing in...')}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">管理員名稱</Label>
+              <Label htmlFor="username">{t('管理員名稱', 'Administrator Name')}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -133,7 +137,7 @@ export default function AdminLogin() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">密碼</Label>
+              <Label htmlFor="password">{t('密碼', 'Password')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -161,7 +165,9 @@ export default function AdminLogin() {
               size="lg"
               disabled={loading}
             >
-              {loading ? (setupMode ? '設定中...' : '登入中...') : (setupMode ? '設定帳號' : '登入')}
+              {loading
+                ? (setupMode ? t('設定中...', 'Setting up...') : t('登入中...', 'Signing in...'))
+                : (setupMode ? t('設定帳號', 'Set Up Account') : t('登入', 'Sign In'))}
             </Button>
 
             <div className="text-center">
@@ -170,7 +176,9 @@ export default function AdminLogin() {
                 onClick={() => setSetupMode(!setupMode)}
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
-                {setupMode ? '已有帳號？返回登入' : '首次使用？設定管理員帳號'}
+                {setupMode
+                  ? t('已有帳號？返回登入', 'Already have an account? Return to sign in')
+                  : t('首次使用？設定管理員帳號', 'First time? Set up administrator account')}
               </button>
             </div>
           </form>
