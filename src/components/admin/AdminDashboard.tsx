@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { GlassCard } from '@/components/GlassCard';
 import { Users, FileCheck, TrendingUp, Clock } from 'lucide-react';
+import { Tables } from '@/integrations/supabase/types';
+
+type AssessmentSession = Tables<'assessment_sessions'>;
 
 interface DashboardStats {
   totalSessions: number;
@@ -18,7 +21,7 @@ export function AdminDashboard() {
     todaySessions: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [recentSessions, setRecentSessions] = useState<any[]>([]);
+  const [recentSessions, setRecentSessions] = useState<AssessmentSession[]>([]);
 
   const fetchStats = useCallback(async () => {
     try {

@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Edit, Save, X, Video, Upload, Play, Eye } from 'lucide-react';
-import { questions as defaultQuestions, Question } from '@/data/questions';
+import { questions as defaultQuestions, Question, QuestionOption, SkillType } from '@/data/questions';
 import { Tables } from '@/integrations/supabase/types';
 import { useToast } from '@/hooks/use-toast';
 
@@ -48,12 +48,12 @@ export function AdminQuestionsList() {
           dbId: q.id,
           id: q.question_id,
           type: 'scenario' as const,
-          skill: q.skill_type as any,
+          skill: q.skill_type as SkillType,
           questionText: q.question_text,
           questionTextEn: q.question_text_en || undefined,
           icon: q.icon || undefined,
           videoUrl: q.video_url || undefined,
-          options: q.options as any,
+          options: q.options as unknown as QuestionOption[],
         }));
 
         const dbQuestionsById = new Map(dbQuestions.map((q) => [q.id, q]));
