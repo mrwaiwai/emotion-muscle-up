@@ -29,6 +29,8 @@ interface TeacherRow {
 
 const DEFAULT_TEACHER_PASSWORD = '123456';
 
+const getErrorMessage = (error: unknown) => error instanceof Error ? error.message : '';
+
 const formatTeacherInfo = (teacher: TeacherRow) => [
   `老師名稱：${teacher.display_name}`,
   `帳號電郵：${teacher.email}`,
@@ -94,7 +96,7 @@ export function AdminTeacherAccounts() {
         description: `${teacher.display_name} 已不能再登入老師工作台`,
       });
       fetchTeachers();
-    } catch (error: any) {
+    } catch (error: unknown) {
       const { error: fallbackError } = await supabase
         .from('teacher_profiles')
         .delete()
@@ -112,7 +114,7 @@ export function AdminTeacherAccounts() {
 
       toast({
         title: '刪除失敗',
-        description: fallbackError.message || error.message || '請稍後再試',
+        description: fallbackError.message || getErrorMessage(error) || '請稍後再試',
         variant: 'destructive',
       });
     } finally {
@@ -148,10 +150,10 @@ export function AdminTeacherAccounts() {
       setEmail('');
       setSchoolName('');
       fetchTeachers();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: '建立失敗',
-        description: error.message || '請稍後再試',
+        description: getErrorMessage(error) || '請稍後再試',
         variant: 'destructive',
       });
     } finally {

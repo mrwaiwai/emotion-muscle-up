@@ -4,6 +4,7 @@ import { GlassCard } from '@/components/GlassCard';
 import { GameResult } from '@/hooks/useGameAssessment';
 import { SkillType } from '@/data/gameQuestions';
 import { RefreshCw, Trophy, Target, Brain, Heart, MessageCircle, Shield } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 
@@ -15,7 +16,7 @@ interface GameResultsPageProps {
 export function GameResultsPage({ result, onReset }: GameResultsPageProps) {
   const { t } = useLanguage();
 
-  const skillConfig: Record<SkillType, { icon: React.ComponentType<any>; label: string; labelEn: string; color: string }> = {
+  const skillConfig: Record<SkillType, { icon: LucideIcon; label: string; labelEn: string; color: string }> = {
     recognizing: { icon: Target, label: '辨別', labelEn: 'Recognizing', color: 'bg-emotion-recognizing' },
     understanding: { icon: Brain, label: '理解', labelEn: 'Understanding', color: 'bg-emotion-understanding' },
     labeling: { icon: Heart, label: '標記', labelEn: 'Labeling', color: 'bg-emotion-labeling' },

@@ -12,6 +12,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const ADMIN_USERNAME = 'ise';
 
+const getErrorMessage = (error: unknown) => error instanceof Error ? error.message : '';
+
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -43,8 +45,8 @@ export default function AdminLogin() {
       
       // Auto-login after setup
       setTimeout(() => handleLogin(), 1000);
-    } catch (err: any) {
-      setError(err.message || t('設定失敗', 'Setup failed'));
+    } catch (err: unknown) {
+      setError(getErrorMessage(err) || t('設定失敗', 'Setup failed'));
     } finally {
       setLoading(false);
     }
