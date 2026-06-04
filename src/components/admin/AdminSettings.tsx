@@ -129,9 +129,9 @@ export function AdminSettings() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-2xl font-bold">網站設定</h2>
-        <Button onClick={saveAllSettings} disabled={saving}>
+        <Button onClick={saveAllSettings} disabled={saving} className="w-full sm:w-auto">
           {saving ? (
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
           ) : (
@@ -141,7 +141,7 @@ export function AdminSettings() {
         </Button>
       </div>
 
-      <GlassCard className="p-6 space-y-6">
+      <GlassCard className="p-4 space-y-6 sm:p-6">
         {/* Basic Settings */}
         <div className="space-y-4">
           <h3 className="font-semibold text-lg">基本設定</h3>
