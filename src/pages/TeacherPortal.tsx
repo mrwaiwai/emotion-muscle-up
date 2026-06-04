@@ -314,166 +314,181 @@ export default function TeacherPortal() {
           </TabsList>
 
           <TabsContent value="start">
-            <div className="space-y-6">
-              <section className="text-center">
-                <h2 className="text-3xl font-extrabold md:text-5xl">
-                  <span className="gradient-text">情緒 MUSCLE UP</span>
-                </h2>
-                <p className="mt-2 text-lg font-medium text-muted-foreground">
-                  {t('兒童情緒能力評估 💪🧠❤️', 'Children’s Emotional Skills Assessment 💪🧠❤️')}
-                </p>
-              </section>
+            <div className="mx-auto max-w-7xl space-y-6">
+              <section className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
+                <div className="space-y-5">
+                  <div className="space-y-3 text-center lg:text-left">
+                    <p className="text-sm font-bold uppercase text-primary">
+                      {t('兒童情緒能力評估', 'Children’s Emotional Skills Assessment')}
+                    </p>
+                    <h2 className="text-4xl font-extrabold leading-tight sm:text-5xl">
+                      <span className="gradient-text">情緒 MUSCLE UP</span>
+                    </h2>
+                    <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg lg:mx-0">
+                      {t(
+                        '以友善、清晰的流程，協助老師了解學生在辨識、理解、表達和調節情緒方面的能力。',
+                        'A friendly, structured flow that helps teachers understand how students recognize, understand, express, and regulate emotions.',
+                      )}
+                    </p>
+                  </div>
 
-              <HeroAnimation />
+                  <HeroAnimation />
+                </div>
 
-              <div className="grid gap-6 md:grid-cols-2">
-                <GlassCard className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-2xl bg-primary/10">
-                      <Heart className="w-6 h-6 text-primary" />
+                <GlassCard variant="strong" className="p-5 sm:p-6 lg:sticky lg:top-28">
+                  <div className="mb-5 flex items-start gap-3">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+                      <Play className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">{t('這項評估是甚麼？', 'What is this assessment?')}</h3>
-                      <p className="text-muted-foreground leading-relaxed">
+                      <p className="text-sm font-semibold text-primary">
+                        {t('老師您好，歡迎使用 Emotion MUSCLE UP', 'Welcome to Emotion MUSCLE UP')}
+                      </p>
+                      <h3 className="mt-1 text-xl font-bold leading-snug">
+                        {t('開始學生評估', 'Start Student Assessment')}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
+                    {t(
+                      '輸入學生姓名和年級後，學生會先看到簡短操作說明，再正式開始答題。',
+                      'After entering the student name and grade, the student will see a short guide before answering.',
+                    )}
+                  </p>
+
+                  <form onSubmit={handleStart} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="student-name">{t('學生姓名', 'Student Name')}</Label>
+                      <Input
+                        id="student-name"
+                        value={studentName}
+                        onChange={(event) => setStudentName(event.target.value)}
+                        placeholder={t('例如：陳小明', 'e.g. Alex Chan')}
+                        className="h-12"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="student-grade">{t('年級', 'Grade')}</Label>
+                      <Input
+                        id="student-grade"
+                        value={studentGrade}
+                        onChange={(event) => setStudentGrade(event.target.value)}
+                        placeholder={t('例如：小三 / P3', 'e.g. Primary 3 / P3')}
+                        className="h-12"
+                      />
+                    </div>
+
+                    <Button type="submit" size="lg" className="h-12 w-full text-base font-bold">
+                      <Play className="mr-2 h-4 w-4" />
+                      {t('開始測試', 'Start Assessment')}
+                    </Button>
+                  </form>
+
+                  <div className="mt-5 grid gap-2">
+                    {[
+                      t('確認學生資料', 'Confirm student details'),
+                      t('學生閱讀操作說明', 'Student reads the short guide'),
+                      t('開始二十題情境評估', 'Begin the 20-question assessment'),
+                    ].map((step, index) => (
+                      <motion.div
+                        key={step}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.08 + index * 0.06 }}
+                        className="flex items-center gap-2 rounded-xl bg-muted/40 px-3 py-2 text-sm font-medium"
+                      >
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                        <span>{step}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </GlassCard>
+              </section>
+
+              <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-[1fr_1.2fr]">
+                <GlassCard className="p-5 sm:p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+                      <Heart className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold">{t('這項評估是甚麼？', 'What is this assessment?')}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
                         {t(
-                          '這項工具會以友善方式了解學生在辨識、理解、表達和調節情緒方面的能力。',
-                          'This tool gently explores how students recognize, understand, express, and regulate emotions.',
+                          '這項工具會以學生容易理解的方式，觀察他們在不同情境中的情緒反應和處理方式。',
+                          'This tool uses student-friendly situations to observe emotional responses and coping approaches.',
                         )}
                       </p>
                     </div>
                   </div>
                 </GlassCard>
 
-                <GlassCard className="p-6">
+                <GlassCard className="p-5 sm:p-6">
                   <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-2xl bg-accent/50">
-                      <Users className="w-6 h-6 text-accent-foreground" />
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent/60">
+                      <Users className="h-6 w-6 text-accent-foreground" />
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold mb-2">{t('適合哪些學生？', 'Who is it for?')}</h3>
-                      <p className="text-2xl font-bold text-primary mb-1">{t('小學生 🎒', 'Primary Students 🎒')}</p>
-                      <p className="text-muted-foreground">{t('適合小一至小六學生使用 ✨', 'Suitable for Primary 1 to Primary 6 students ✨')}</p>
-                      <div className="mt-3 flex items-center gap-2 rounded-xl bg-muted/50 p-3">
-                        <BookOpen className="w-5 h-5 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-bold">{t('適合哪些學生？', 'Who is it for?')}</h3>
+                      <p className="mt-2 text-xl font-bold text-primary">{t('小一至小六學生', 'Primary 1 to Primary 6 Students')}</p>
+                      <div className="mt-3 flex items-start gap-2 rounded-xl bg-muted/50 p-3">
+                        <BookOpen className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+                        <span className="text-sm leading-relaxed text-muted-foreground">
                           {t('評估結果只作教育參考，並非心理診斷。', 'Results are for educational reference only and are not a psychological diagnosis.')}
                         </span>
                       </div>
                     </div>
                   </div>
                 </GlassCard>
-              </div>
+              </section>
 
-              <GlassCard className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <Sparkles className="w-6 h-6 text-primary" />
-                  <h3 className="text-xl font-bold">{t('評估會涵蓋五項情緒技能', 'The assessment covers five emotional skills')}</h3>
-                </div>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {overviewSkills.map((skill, index) => (
-                    <motion.span
-                      key={skill.name}
-                      className={`px-4 py-2 rounded-full text-white font-medium text-sm ${skill.color}`}
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: index * 0.08 }}
-                    >
-                      {skill.name}
-                    </motion.span>
-                  ))}
-                </div>
-
-                <h3 className="font-bold mb-3 flex items-center gap-2">
-                  <Star className="w-5 h-5 text-emotion-labeling" />
-                  {t('四個成長階段', 'Four Growth Stages')}
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {overviewStages.map((stage, index) => (
-                    <motion.div
-                      key={stage.name}
-                      className="text-center p-3 rounded-xl bg-muted/30"
-                      initial={{ y: 16, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.2 + index * 0.08 }}
-                    >
-                      <span className="text-2xl mb-1 block">{stage.icon}</span>
-                      <p className="font-bold text-sm">{stage.name}</p>
-                      <p className="text-xs text-muted-foreground">{stage.desc}</p>
-                    </motion.div>
-                  ))}
-                </div>
-              </GlassCard>
-
-              <GlassCard variant="strong" className="p-6 max-w-xl">
-                <div className="mb-6 rounded-2xl bg-primary/10 p-5">
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-start gap-4"
-                  >
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-background/80 text-2xl">
-                      👋
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-primary">{t('老師您好，歡迎使用 Emotion MUSCLE UP', 'Welcome to Emotion MUSCLE UP')}</p>
-                      <h2 className="mt-1 text-2xl font-bold">{t('這裡是學生開始評估的入口', 'This is where students begin the assessment')}</h2>
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                        {t(
-                          '請先輸入學生姓名和年級，再按「開始測試」。學生開始答題前會看到操作動畫，了解如何閱讀情境、選擇答案和前往下一題。',
-                          'Enter the student name and grade, then select “Start Assessment”. Before answering, students will see a short guide on reading each situation, choosing an answer, and moving to the next question.',
-                        )}
-                      </p>
-                    </div>
-                  </motion.div>
-
-                  <div className="mt-5 grid gap-3 md:grid-cols-3">
-                    {[
-                      t('輸入學生姓名', 'Enter student name'),
-                      t('填寫年級', 'Enter grade'),
-                      t('交給學生開始答題', 'Let the student begin'),
-                    ].map((step, index) => (
+              <section className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+                <GlassCard className="p-5 sm:p-6">
+                  <div className="mb-4 flex items-center gap-3">
+                    <Sparkles className="h-6 w-6 text-primary" />
+                    <h3 className="text-lg font-bold">{t('五項情緒技能', 'Five Emotional Skills')}</h3>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
+                    {overviewSkills.map((skill, index) => (
                       <motion.div
-                        key={step}
-                        initial={{ opacity: 0, y: 8 }}
+                        key={skill.name}
+                        className="flex min-h-12 items-center rounded-xl bg-background/70 p-2.5"
+                        initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 + index * 0.08 }}
-                        className="flex items-center gap-2 rounded-xl bg-background/70 px-3 py-2 text-sm font-medium"
+                        transition={{ delay: index * 0.05 }}
                       >
-                        <CheckCircle2 className="h-4 w-4 text-primary" />
-                        {step}
+                        <span className={`mr-2 h-3 w-3 shrink-0 rounded-full ${skill.color}`} />
+                        <span className="text-sm font-bold leading-snug">{skill.name}</span>
                       </motion.div>
                     ))}
                   </div>
-                </div>
+                </GlassCard>
 
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Play className="w-5 h-5 text-primary" />
+                <GlassCard className="p-5 sm:p-6">
+                  <div className="mb-4 flex items-center gap-3">
+                    <Star className="h-5 w-5 text-emotion-labeling" />
+                    <h3 className="text-lg font-bold">{t('四個成長階段', 'Four Growth Stages')}</h3>
                   </div>
-                  <div>
-                    <h2 className="text-xl font-bold">{t('開始 Emotion MUSCLE UP 評估', 'Start Emotion MUSCLE UP Assessment')}</h2>
+                  <div className="grid grid-cols-2 gap-3">
+                    {overviewStages.map((stage, index) => (
+                      <motion.div
+                        key={stage.name}
+                        className="rounded-xl bg-muted/30 p-3"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 + index * 0.06 }}
+                      >
+                        <span className="mb-1 block text-2xl">{stage.icon}</span>
+                        <p className="text-sm font-bold">{stage.name}</p>
+                        <p className="text-xs leading-relaxed text-muted-foreground">{stage.desc}</p>
+                      </motion.div>
+                    ))}
                   </div>
-                </div>
-
-                <form onSubmit={handleStart} className="space-y-4">
-                  <Input
-                    value={studentName}
-                    onChange={(event) => setStudentName(event.target.value)}
-                    placeholder={t('輸入學生姓名', 'Enter student name')}
-                    className="h-12"
-                    required
-                  />
-                  <Input
-                    value={studentGrade}
-                    onChange={(event) => setStudentGrade(event.target.value)}
-                    placeholder={t('輸入年級，例如：小三', 'Enter grade, e.g. Primary 3')}
-                    className="h-12"
-                  />
-                  <Button type="submit" size="lg" className="w-full">
-                    {t('開始測試', 'Start Assessment')}
-                  </Button>
-                </form>
-              </GlassCard>
+                </GlassCard>
+              </section>
             </div>
           </TabsContent>
 
